@@ -1,0 +1,28 @@
+allowList:
+  hosts:
+    - api.github.com # For downloading the dependencies
+    - github.com # Main GitHub domain
+    - raw.githubusercontent.com # For accessing raw file content
+    - codeload.github.com # For downloading repository archives
+    - objects.githubusercontent.com # For Git LFS objects
+    - github-releases.githubusercontent.com # For release assets
+    - avatars.githubusercontent.com # For user avatars
+    - github-cloud.s3.amazonaws.com # For GitHub's cloud storage
+    - user-images.githubusercontent.com # For user uploaded images
+    - copilot-proxy.githubusercontent.com # For Copilot proxy services
+    - copilot.github.com # For Copilot services
+    - packagist.org # For Composer package metadata
+    - repo.packagist.org # For Composer package repository
+    - getcomposer.org # For Composer itself
+  urls:
+    - https://api.github.com/repos/* # Allow all repository API endpoints
+    - https://api.github.com/user/* # Allow user API endpoints
+    - https://api.github.com/orgs/* # Allow organization API endpoints
+    - https://api.github.com/search/* # Allow search API endpoints
+    - https://github.com/* # Allow all GitHub web endpoints
+    - https://packagist.org/* # Allow Packagist access
+    - https://repo.packagist.org/* # Allow Packagist repository access
+  ports:
+    - 22 # SSH port for git operations
+    - 80 # HTTP
+    - 443 # HTTPS

@@ -1,0 +1,31 @@
+#version: "3.9"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: php-8.3-ubuntu-24.04.Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+  db:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: p0fru8wl
+      MYSQL_DATABASE: gogrocer
+      MYSQL_USER: gogrocer
+      MYSQL_PASSWORD: uwsXS1Tk
+    volumes:
+      - ./db:/var/lib/mysql
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis:/data

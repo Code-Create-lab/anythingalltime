@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+
+class LanguageController extends Controller
+{
+    public function change(Request $request): RedirectResponse
+    {
+        App::setLocale($request->lang);
+        session()->put('locale', $request->lang);
+
+        return redirect()->back();
+    }
+}

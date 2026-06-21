@@ -1,0 +1,64 @@
+---
+name: Tests
+
+'on':
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, dom, fileinfo, sqlite3, pdo_sqlite
+          coverage: none
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+        working-directory: source
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+        working-directory: source
+
+      - name: Copy testing environment file
+        run: cp .env.testing .env
+        working-directory: source
+
+      - name: Setup SQLite database for testing
+        run: |
+          touch database/database.sqlite
+          sed -i 's/DB_CONNECTION=mysql/DB_CONNECTION=sqlite/' .env
+          sed -i 's/DB_DATABASE=gogrocer_testing/DB_DATABASE=database\/database.sqlite/' .env
+          sed -i 's/<env name="DB_CONNECTION" value="mysql"\/>/<env name="DB_CONNECTION" value="sqlite"\/>/' phpunit.xml
+          sed -i 's/<env name="DB_HOST" value="db"\/>/<env name="DB_HOST" value="127.0.0.1"\/>/' phpunit.xml
+          sed -i 's/<env name="DB_DATABASE" value="gogrocer_testing"\/>/<env name="DB_DATABASE" value="database\/database.sqlite"\/>/' phpunit.xml
+        working-directory: source
+
+      - name: Generate application key
+        run: php artisan key:generate
+        working-directory: source
+
+      - name: Run migrations
+        run: php artisan migrate --force
+        working-directory: source
+
+      - name: Run tests
+        run: php artisan test
+        working-directory: source

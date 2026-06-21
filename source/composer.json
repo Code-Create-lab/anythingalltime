@@ -1,0 +1,85 @@
+{
+    "name": "laravel/laravel",
+    "type": "project",
+    "description": "The Laravel Framework.",
+    "keywords": ["framework", "laravel"],
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "fideloper/proxy": "^4.4",
+        "guzzlehttp/guzzle": "^7.0.1",
+        "kedniko/firebase-cloud-messaging-http-v1-php": "^0.0.2",
+        "laravel/framework": "^v9.52.14",
+        "laravel/passport": "^11.10",
+        "laravel/tinker": "^2.5",
+        "laravel/ui": "^3.2",
+        "league/flysystem-aws-s3-v3": "3.0.0",
+        "maatwebsite/excel": "^3.1",
+        "power-components/livewire-powergrid": "^1.4",
+        "razorpay/razorpay": "^2.7",
+        "srmklive/paypal": "^3.0",
+        "stripe/stripe-php": "^7.87",
+        "twilio/sdk": "^6.26",
+        "unicodeveloper/laravel-paystack": "^1.0"
+    },
+    "require-dev": {
+        "fakerphp/faker": "^1.9.1",
+        "laravel/pint": "^1.23",
+        "laravel/sail": "^1.0.1",
+        "mockery/mockery": "^1.4.2",
+        "nunomaduro/collision": "^6.0",
+        "phpunit/phpunit": "^9.3.3",
+        "spatie/laravel-ignition": "^1.0"
+    },
+    "autoload": {
+
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        },
+		"files": [
+            "app/Helpers/general.php",
+            "app/Helpers/InstallerHelper.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "secure-http": true,
+        "use-github-api": true,
+        "github-protocols": ["https"]
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packagist.org"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

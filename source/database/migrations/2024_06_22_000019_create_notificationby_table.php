@@ -1,0 +1,28 @@
+<?php
+
+declare(strict_types=1);
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        if (!Schema::hasTable('notificationby')) {
+            Schema::create('notificationby', function (Blueprint $table) {
+                $table->increments('noti_id');
+                $table->integer('user_id');
+                $table->integer('sms');
+                $table->integer('app');
+                $table->integer('email');
+            });
+        }
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('notificationby');
+    }
+};
