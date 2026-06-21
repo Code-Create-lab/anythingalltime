@@ -162,20 +162,23 @@ class StoreController extends Controller
             return redirect()->back()->withErrors(trans('keywords.This Email is Already Registered With Another Store'));
         }
 
-        if ($mapset->mapbox == 0 && $mapset->google_map == 1) {
-            $response = json_decode(file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.urlencode($address1).'&key='.$checkmap->map_api_key));
+        // Map geocoding disabled — no map API key. Store address directly from address column.
+        // if ($mapset->mapbox == 0 && $mapset->google_map == 1) {
+        //     $response = json_decode(file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.urlencode($address1).'&key='.$checkmap->map_api_key));
+        //
+        //     $lat = $response->results[0]->geometry->location->lat;
+        //     $lng = $response->results[0]->geometry->location->lng;
+        // } else {
+        //
+        //     $lat = $request->lat;
+        //     $lng = $request->lng;
+        // }
+        $lat = $request->lat ?? 0;
+        $lng = $request->lng ?? 0;
 
-            $lat = $response->results[0]->geometry->location->lat;
-            $lng = $response->results[0]->geometry->location->lng;
-        } else {
-
-            $lat = $request->lat;
-            $lng = $request->lng;
-        }
-
-        if (is_null($lat) || is_null($lng)) {
-            return redirect()->back()->withErrors(trans('keywords.MapCoords are Null'));
-        }
+        // if (is_null($lat) || is_null($lng)) {
+        //     return redirect()->back()->withErrors(trans('keywords.MapCoords are Null'));
+        // }
 
         if ($request->hasFile('image')) {
             $image = $request->image;
@@ -381,18 +384,21 @@ class StoreController extends Controller
             return redirect()->back()->withErrors(trans('keywords.This Email is Already Registered With Another Store'));
         }
 
-        if ($mapset->mapbox == 0 && $mapset->google_map == 1) {
-            $response = json_decode(file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.urlencode($address1).'&key='.$checkmap->map_api_key));
-
-            $lat = $response->results[0]->geometry->location->lat;
-            $lng = $response->results[0]->geometry->location->lng;
-        } else {
-            $lat = $request->lat;
-            $lng = $request->lng;
-        }
-        if (is_null($lat) || is_null($lng)) {
-            return redirect()->back()->withErrors(trans('keywords.MapCoords are Null'));
-        }
+        // Map geocoding disabled — no map API key. Store address directly from address column.
+        // if ($mapset->mapbox == 0 && $mapset->google_map == 1) {
+        //     $response = json_decode(file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.urlencode($address1).'&key='.$checkmap->map_api_key));
+        //
+        //     $lat = $response->results[0]->geometry->location->lat;
+        //     $lng = $response->results[0]->geometry->location->lng;
+        // } else {
+        //     $lat = $request->lat;
+        //     $lng = $request->lng;
+        // }
+        $lat = $request->lat ?? 0;
+        $lng = $request->lng ?? 0;
+        // if (is_null($lat) || is_null($lng)) {
+        //     return redirect()->back()->withErrors(trans('keywords.MapCoords are Null'));
+        // }
 
         $getstore = DB::table('store')
             ->where('id', $store_id)

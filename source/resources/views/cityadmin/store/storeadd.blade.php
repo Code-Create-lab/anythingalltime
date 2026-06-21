@@ -152,8 +152,19 @@
                         </div>
                       </div>
                     </div><br>
-                    @if($mapset->mapbox == 0 && $mapset->google_map == 1)
-                         <div class="row">                    
+                    {{-- Map autocomplete disabled (no map API key). Plain address input. --}}
+                    <div class="row">
+                       <div class="col-md-12">
+                          <div class="form-group">
+                             <label for="address"> {{ __('keywords.Store Address')}} </label>
+                             <input id="lng" type="hidden" name="lng">
+                             <input id="lat" type="hidden" name="lat">
+                             <input type="text" name="address" id="address" class="form-control" placeholder="address" value="{{old('address')}}">
+                          </div>
+                       </div>
+                    </div>
+                    {{-- @if($mapset->mapbox == 0 && $mapset->google_map == 1)
+                         <div class="row">
                             <div class="col-md-12">
                            <div class="form-group">
                             <label for="autocomplete"> {{ __('keywords.Store Address')}} </label>
@@ -162,8 +173,8 @@
                           </div>
                       </div>
                       @endif
-                     @if($mapset->mapbox == 1 && $mapset->google_map == 0) 
-                      <div class="row">                    
+                     @if($mapset->mapbox == 1 && $mapset->google_map == 0)
+                      <div class="row">
                             <div class="col-md-12">
                            <div class="form-group">
                             <label for="autocomplete"> {{ __('keywords.Store Address')}} </label>
@@ -171,12 +182,12 @@
                            <input id="lng" type="hidden" name="lng">
                               <input id="lat" type="hidden" name="lat">
                             <input id="myInput" type="text" name="address" placeholder="address"  value="{{old('address')}}">
-                             
+
                         </div>
                          </div>
                           </div>
                       </div>
-                      @endif
+                      @endif --}}
 
                        <div class="row">
                       <div class="col-md-12">
@@ -223,10 +234,13 @@
 
 @section('postload-section')
 
+{{-- Map autocomplete scripts disabled (no map API key) --}}
+@if(false)
 @if($mapset->mapbox == 1 && $mapset->google_map == 0)
     @include('cityadmin.plugins.mapbox_postload')
 @else
     @include('cityadmin.plugins.gmaps_postload')
+@endif
 @endif
 
 @endsection

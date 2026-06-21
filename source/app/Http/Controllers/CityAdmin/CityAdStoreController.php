@@ -139,27 +139,30 @@ class CityAdStoreController extends Controller
         $address = str_replace(' ', '+', $request->address);
         $address1 = str_replace('-', '+', $address);
 
-        if (! isset($lat) || (! isset($lng))) {
-            $mapset = MapSettings::select('mapbox', 'google_map')->firstOrFail();
-            if ($mapset) {
-                if ($mapset->mapbox == 1) {
-                    $server_key = MapBoxData::select('mapbox_api')->firstOrFail();
-                    $server_key = $server_key->mapbox_api;
-                } else {
-                    $server_key = GMapsData::select('map_api_key')->firstOrFail();
-                    $server_key = $server_key->map_api_key;
-                }
-            }
-            if ($mapset->google_map == 1) {
-                $server_key = GMapsData::select('map_api_key')->firstOrFail();
-                $server_key = $server_key->map_api_key;
-                $response = json_decode(file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.urlencode($address1).'&key='.$server_key));
-                $lat = $response->results[0]->geometry->location->lat;
-                $lng = $response->results[0]->geometry->location->lng;
-            } else {
-                return redirect()->back()->withErrors(trans('keywords.Error Validating Address'));
-            }
-        }
+        // Map geocoding disabled — no map API key. Store address directly from address column.
+        // if (! isset($lat) || (! isset($lng))) {
+        //     $mapset = MapSettings::select('mapbox', 'google_map')->firstOrFail();
+        //     if ($mapset) {
+        //         if ($mapset->mapbox == 1) {
+        //             $server_key = MapBoxData::select('mapbox_api')->firstOrFail();
+        //             $server_key = $server_key->mapbox_api;
+        //         } else {
+        //             $server_key = GMapsData::select('map_api_key')->firstOrFail();
+        //             $server_key = $server_key->map_api_key;
+        //         }
+        //     }
+        //     if ($mapset->google_map == 1) {
+        //         $server_key = GMapsData::select('map_api_key')->firstOrFail();
+        //         $server_key = $server_key->map_api_key;
+        //         $response = json_decode(file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.urlencode($address1).'&key='.$server_key));
+        //         $lat = $response->results[0]->geometry->location->lat;
+        //         $lng = $response->results[0]->geometry->location->lng;
+        //     } else {
+        //         return redirect()->back()->withErrors(trans('keywords.Error Validating Address'));
+        //     }
+        // }
+        $lat = $request->lat ?? 0;
+        $lng = $request->lng ?? 0;
 
         if ($request->hasFile('image')) {
             $image = $request->image;
@@ -230,7 +233,7 @@ class CityAdStoreController extends Controller
         $store->del_range = $range;
         $store->lat = $lat;
         $store->lng = $lng;
-        $store->address = $address1;
+        $store->address = $request->address;
         $store->store_opening_time = $start_time;
         $store->store_closing_time = $end_time;
         $store->time_interval = $interval;
@@ -345,27 +348,30 @@ class CityAdStoreController extends Controller
         $address = str_replace(' ', '+', $request->address);
         $address1 = str_replace('-', '+', $address);
 
-        if (! isset($lat) || (! isset($lng))) {
-            $mapset = MapSettings::select('mapbox', 'google_map')->firstOrFail();
-            if ($mapset) {
-                if ($mapset->mapbox == 1) {
-                    $server_key = MapBoxData::select('mapbox_api')->firstOrFail();
-                    $server_key = $server_key->mapbox_api;
-                } else {
-                    $server_key = GMapsData::select('map_api_key')->firstOrFail();
-                    $server_key = $server_key->map_api_key;
-                }
-            }
-            if ($mapset->google_map == 1) {
-                $server_key = GMapsData::select('map_api_key')->firstOrFail();
-                $server_key = $server_key->map_api_key;
-                $response = json_decode(file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.urlencode($address1).'&key='.$server_key));
-                $lat = $response->results[0]->geometry->location->lat;
-                $lng = $response->results[0]->geometry->location->lng;
-            } else {
-                return redirect()->back()->withErrors(trans('keywords.Error Validating Address'));
-            }
-        }
+        // Map geocoding disabled — no map API key. Store address directly from address column.
+        // if (! isset($lat) || (! isset($lng))) {
+        //     $mapset = MapSettings::select('mapbox', 'google_map')->firstOrFail();
+        //     if ($mapset) {
+        //         if ($mapset->mapbox == 1) {
+        //             $server_key = MapBoxData::select('mapbox_api')->firstOrFail();
+        //             $server_key = $server_key->mapbox_api;
+        //         } else {
+        //             $server_key = GMapsData::select('map_api_key')->firstOrFail();
+        //             $server_key = $server_key->map_api_key;
+        //         }
+        //     }
+        //     if ($mapset->google_map == 1) {
+        //         $server_key = GMapsData::select('map_api_key')->firstOrFail();
+        //         $server_key = $server_key->map_api_key;
+        //         $response = json_decode(file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.urlencode($address1).'&key='.$server_key));
+        //         $lat = $response->results[0]->geometry->location->lat;
+        //         $lng = $response->results[0]->geometry->location->lng;
+        //     } else {
+        //         return redirect()->back()->withErrors(trans('keywords.Error Validating Address'));
+        //     }
+        // }
+        $lat = $request->lat ?? 0;
+        $lng = $request->lng ?? 0;
 
         $image = $store->store_photo;
         $date = date('d-m-Y');
@@ -453,7 +459,7 @@ class CityAdStoreController extends Controller
             'del_range' => $range,
             'lat' => $lat,
             'lng' => $lng,
-            'address' => $address1,
+            'address' => $request->address,
             'store_opening_time' => $start_time,
             'store_closing_time' => $end_time,
             'time_interval' => $interval,
