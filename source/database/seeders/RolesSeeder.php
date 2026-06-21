@@ -14,13 +14,10 @@ class RolesSeeder extends Seeder
      */
     public function run()
     {
+        // Legacy schema: role_id, role_name + per-module permission flags (no description/status/timestamps)
         DB::table('roles')->insertOrIgnore([
             'role_id' => 1,
             'role_name' => 'Sub Admin',
-            'role_description' => 'Sub administrator with limited permissions',
-            'status' => true,
-            'created_at' => now(),
-            'updated_at' => now(),
         ]);
     }
 }
