@@ -140,6 +140,8 @@ class CityAdStoreController extends Controller
         $address1 = str_replace('-', '+', $address);
 
         // Map geocoding disabled — no map API key. Store address directly from address column.
+        // GOOGLE MAP API: was used to auto-resolve lat/lng from address (commented block below).
+        // Now admin enters lat & lng MANUALLY in the store form; values come from $request->lat / $request->lng.
         // if (! isset($lat) || (! isset($lng))) {
         //     $mapset = MapSettings::select('mapbox', 'google_map')->firstOrFail();
         //     if ($mapset) {
@@ -349,6 +351,8 @@ class CityAdStoreController extends Controller
         $address1 = str_replace('-', '+', $address);
 
         // Map geocoding disabled — no map API key. Store address directly from address column.
+        // GOOGLE MAP API: was used to auto-resolve lat/lng from address (commented block below).
+        // Now admin enters lat & lng MANUALLY in the store form; values come from $request->lat / $request->lng.
         // if (! isset($lat) || (! isset($lng))) {
         //     $mapset = MapSettings::select('mapbox', 'google_map')->firstOrFail();
         //     if ($mapset) {

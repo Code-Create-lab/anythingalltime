@@ -163,6 +163,8 @@ class StoreController extends Controller
         }
 
         // Map geocoding disabled — no map API key. Store address directly from address column.
+        // GOOGLE MAP API: was used to auto-resolve lat/lng from address (commented block below).
+        // Now admin enters lat & lng MANUALLY in the store form; values come from $request->lat / $request->lng.
         // if ($mapset->mapbox == 0 && $mapset->google_map == 1) {
         //     $response = json_decode(file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.urlencode($address1).'&key='.$checkmap->map_api_key));
         //
@@ -385,6 +387,8 @@ class StoreController extends Controller
         }
 
         // Map geocoding disabled — no map API key. Store address directly from address column.
+        // GOOGLE MAP API: was used to auto-resolve lat/lng from address (commented block below).
+        // Now admin enters lat & lng MANUALLY in the store form; values come from $request->lat / $request->lng.
         // if ($mapset->mapbox == 0 && $mapset->google_map == 1) {
         //     $response = json_decode(file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.urlencode($address1).'&key='.$checkmap->map_api_key));
         //

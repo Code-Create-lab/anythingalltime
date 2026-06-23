@@ -261,14 +261,29 @@
                       </div>
                       
                     </div><br>
-                       {{-- Map autocomplete disabled (no map API key). Plain address input. --}}
+                       {{-- Map autocomplete disabled (no map API key). Plain address input.
+                            GOOGLE MAP API: Normally lat/lng auto-filled by Google Maps Autocomplete (see initMap script below).
+                            Disabled here — admin edits latitude & longitude MANUALLY in the fields below. --}}
                        <div class="row">
                           <div class="col-md-12">
                              <div class="form-group">
                                 <label for="address"> {{ __('keywords.Store Address')}} </label>
-                                <input id="lng" type="hidden" name="lng" value="{{$store->lng}}">
-                                <input id="lat" type="hidden" name="lat" value="{{$store->lat}}">
                                 <input type="text" name="address" id="address" value="{{$store->address}}" placeholder="address" class="form-control">
+                             </div>
+                          </div>
+                       </div>
+                       {{-- Manual lat/lng entry (replaces Google Map API auto-fill) --}}
+                       <div class="row">
+                          <div class="col-md-6">
+                             <div class="form-group">
+                                <label for="lat"> {{ __('keywords.Latitude')}} </label>
+                                <input id="lat" type="text" name="lat" class="form-control" placeholder="Latitude" value="{{$store->lat}}">
+                             </div>
+                          </div>
+                          <div class="col-md-6">
+                             <div class="form-group">
+                                <label for="lng"> {{ __('keywords.Longitude')}} </label>
+                                <input id="lng" type="text" name="lng" class="form-control" placeholder="Longitude" value="{{$store->lng}}">
                              </div>
                           </div>
                        </div>
@@ -379,7 +394,9 @@
                         inp.value = $(this).find('input').val();
                         $(inp).attr('data-lat', lat);
                         $(inp).attr('data-lng', long);
-                         document.getElementById("lat").value = lat;
+                         // MAPBOX API: auto-inserts lat/lng into the lat/lng inputs from selected place.
+                        // (Mapbox block currently disabled; admin edits lat/lng manually instead.)
+                        document.getElementById("lat").value = lat;
                         document.getElementById("lng").value = long;
                         closeAllLists();
                     });
@@ -472,6 +489,8 @@
        var autocomplete = new google.maps.places.Autocomplete(input);
        autocomplete.addListener('place_changed', function() {
            var place = autocomplete.getPlace();
+           // GOOGLE MAP API: auto-inserts lat/lng from the selected place into the lat/lng inputs.
+           // (Disabled when no map API key; admin edits latitude & longitude manually in the form above.)
            $('#latitude').val(place.geometry['location'].lat());
            $('#longitude').val(place.geometry['location'].lng());
            $("#lat_area").removeClass("d-none");
