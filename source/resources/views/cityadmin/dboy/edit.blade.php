@@ -130,6 +130,26 @@
                          </div>
                           </div>
                       @endif
+                     @if($mapset->mapbox == 0 && $mapset->google_map == 0)
+                            <div class="col-md-12">
+                           <div class="form-group">
+                            <label for="boy_loc"> {{ __('keywords.Boy Address')}} </label>
+                            <input type="text" name="boy_loc" id="boy_loc" class="form-control" value="{{$d_boy->boy_loc}}" required>
+                        </div>
+                          </div>
+                            <div class="col-md-6">
+                           <div class="form-group">
+                            <label for="lat"> {{ __('keywords.Latitude')}} </label>
+                            <input type="text" name="lat" id="lat" class="form-control" value="{{$d_boy->lat}}" placeholder="e.g. 12.9716">
+                        </div>
+                          </div>
+                            <div class="col-md-6">
+                           <div class="form-group">
+                            <label for="lng"> {{ __('keywords.Longitude')}} </label>
+                            <input type="text" name="lng" id="lng" class="form-control" value="{{$d_boy->lng}}" placeholder="e.g. 77.5946">
+                        </div>
+                          </div>
+                      @endif
                  
                     
                     </div>

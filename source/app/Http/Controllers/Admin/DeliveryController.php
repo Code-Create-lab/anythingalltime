@@ -119,16 +119,12 @@ class DeliveryController extends Controller
         $lng = $request->lng;
 
         $mapset = MapSettings::select('mapbox', 'google_map')->firstOrFail();
-        if (! isset($lat) || (! isset($lng))) {
-            if ($mapset->google_map == 1) {
-                $server_key = GMapsData::select('map_api_key')->firstOrFail();
-                $server_key = $server_key->map_api_key;
-                $response = json_decode(file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.urlencode($address1).'&key='.$server_key));
-                $lat = $response->results[0]->geometry->location->lat;
-                $lng = $response->results[0]->geometry->location->lng;
-            } else {
-                return redirect()->back()->withErrors(trans('keywords.Error Validating Address'));
-            }
+        // Manual lat/lng entry: default to 0 when not provided instead of geocoding via map API
+        if (! isset($lat) || $lat === '') {
+            $lat = 0;
+        }
+        if (! isset($lng) || $lng === '') {
+            $lng = 0;
         }
 
         $this->validate(
@@ -289,8 +285,14 @@ class DeliveryController extends Controller
         if ($mapset->mapbox == 0 && $mapset->google_map == 1) {
             $response = json_decode(file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.urlencode($address1).'&key='.$key));
 
-            $lat = $response->results[0]->geometry->location->lat;
-            $lng = $response->results[0]->geometry->location->lng;
+            // Fallback to manually entered lat/lng when geocode returns no result (e.g. missing/invalid map key)
+            if (isset($response->results[0])) {
+                $lat = $response->results[0]->geometry->location->lat;
+                $lng = $response->results[0]->geometry->location->lng;
+            } else {
+                $lat = $request->lat ?? 0;
+                $lng = $request->lng ?? 0;
+            }
         } else {
             $lat = $request->lat;
             $lng = $request->lng;
