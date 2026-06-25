@@ -26,7 +26,7 @@ trait SendMail
     {
         $logo = DB::table('tbl_web_setting')
             ->first();
-        $app_name = $logo ? $logo->name : 'GoGrocer';
+        $app_name = $logo ? $logo->name : 'Anything Alltime';
         $currency = DB::table('currency')
             ->first();
         $currency_sign = $currency->currency_sign;
@@ -44,7 +44,7 @@ trait SendMail
     {
         $logo = DB::table('tbl_web_setting')
             ->first();
-        $app_name = $logo ? $logo->name : 'GoGrocer';
+        $app_name = $logo ? $logo->name : 'Anything Alltime';
         $currency = DB::table('currency')
             ->first();
         $currency_sign = $currency->currency_sign;
@@ -62,7 +62,7 @@ trait SendMail
     {
         $logo = DB::table('tbl_web_setting')
             ->first();
-        $app_name = $logo ? $logo->name : 'GoGrocer';
+        $app_name = $logo ? $logo->name : 'Anything Alltime';
         $currency = DB::table('currency')
             ->first();
         $currency_sign = $currency->currency_sign;
@@ -80,7 +80,7 @@ trait SendMail
     {
         $logo = DB::table('tbl_web_setting')
             ->first();
-        $app_name = $logo ? $logo->name : 'GoGrocer';
+        $app_name = $logo ? $logo->name : 'Anything Alltime';
         $currency = DB::table('currency')
             ->first();
         $currency_sign = $currency->currency_sign;
@@ -98,7 +98,7 @@ trait SendMail
     {
         $logo = DB::table('tbl_web_setting')
             ->first();
-        $app_name = $logo ? $logo->name : 'GoGrocer';
+        $app_name = $logo ? $logo->name : 'Anything Alltime';
         $currency = DB::table('currency')
             ->first();
         $currency_sign = $currency->currency_sign;
@@ -117,7 +117,7 @@ trait SendMail
 
         $logo = DB::table('tbl_web_setting')
             ->first();
-        $app_name = $logo ? $logo->name : 'GoGrocer';
+        $app_name = $logo ? $logo->name : 'Anything Alltime';
         $currency = DB::table('currency')
             ->first();
         $currency_sign = $currency->currency_sign;
@@ -136,7 +136,7 @@ trait SendMail
 
         $logo = DB::table('tbl_web_setting')
             ->first();
-        $app_name = $logo ? $logo->name : 'GoGrocer';
+        $app_name = $logo ? $logo->name : 'Anything Alltime';
         $currency = DB::table('currency')
             ->first();
         $currency_sign = $currency->currency_sign;
@@ -155,7 +155,7 @@ trait SendMail
 
         $logo = DB::table('tbl_web_setting')
             ->first();
-        $app_name = $logo ? $logo->name : 'GoGrocer';
+        $app_name = $logo ? $logo->name : 'Anything Alltime';
         $currency = DB::table('currency')
             ->first();
         $currency_sign = $currency->currency_sign;
@@ -175,7 +175,7 @@ trait SendMail
             ->first();
         $logo = DB::table('tbl_web_setting')
             ->first();
-        $app_name = $logo ? $logo->name : 'GoGrocer';
+        $app_name = $logo ? $logo->name : 'Anything Alltime';
         $currency = DB::table('currency')
             ->first();
         $currency_sign = $currency->currency_sign;
@@ -193,7 +193,7 @@ trait SendMail
     {
         $logo = DB::table('tbl_web_setting')
             ->first();
-        $app_name = $logo ? $logo->name : 'GoGrocer';
+        $app_name = $logo ? $logo->name : 'Anything Alltime';
         $curr = DB::table('currency')
             ->first();
         $currency_sign = $curr ? $curr->currency_sign : '$';
@@ -211,7 +211,7 @@ trait SendMail
     {
         $logo = DB::table('tbl_web_setting')
             ->first();
-        $app_name = $logo ? $logo->name : 'GoGrocer';
+        $app_name = $logo ? $logo->name : 'Anything Alltime';
         $curr = DB::table('currency')
             ->first();
         $currency_sign = $curr ? $curr->currency_sign : '$';
@@ -229,7 +229,7 @@ trait SendMail
     {
         $logo = DB::table('tbl_web_setting')
             ->first();
-        $app_name = $logo ? $logo->name : 'GoGrocer';
+        $app_name = $logo ? $logo->name : 'Anything Alltime';
         $curr = DB::table('currency')
             ->first();
         $currency_sign = $curr ? $curr->currency_sign : '$';
@@ -249,7 +249,7 @@ trait SendMail
     {
         $logo = DB::table('tbl_web_setting')
             ->first();
-        $app_name = $logo ? $logo->name : 'GoGrocer';
+        $app_name = $logo ? $logo->name : 'Anything Alltime';
         $currency = DB::table('currency')
             ->first();
         $currency_sign = $currency->currency_sign;
@@ -268,7 +268,7 @@ trait SendMail
 
         $logo = DB::table('tbl_web_setting')
             ->first();
-        $app_name = $logo ? $logo->name : 'GoGrocer';
+        $app_name = $logo ? $logo->name : 'Anything Alltime';
         $currency = DB::table('currency')
             ->first();
         $currency_sign = $currency->currency_sign;
@@ -286,7 +286,7 @@ trait SendMail
     {
         $logo = DB::table('tbl_web_setting')
             ->first();
-        $app_name = $logo ? $logo->name : 'GoGrocer';
+        $app_name = $logo ? $logo->name : 'Anything Alltime';
 
         $data = ['to' => $user_email, 'from' => 'noreply@thecodecafe.in', 'to-name' => $user_name, 'from-name' => $app_name];
 
@@ -302,7 +302,7 @@ trait SendMail
     {
         $logo = DB::table('tbl_web_setting')
             ->first();
-        $app_name = $logo ? $logo->name : 'GoGrocer';
+        $app_name = $logo ? $logo->name : 'Anything Alltime';
         $curr = DB::table('currency')
             ->first();
         $currency_sign = $curr ? $curr->currency_sign : '$';
@@ -320,7 +320,7 @@ trait SendMail
     {
         $logo = DB::table('tbl_web_setting')
             ->first();
-        $app_name = $logo ? $logo->name : 'GoGrocer';
+        $app_name = $logo ? $logo->name : 'Anything Alltime';
         $curr = DB::table('currency')
             ->first();
         $currency_sign = $curr ? $curr->currency_sign : '$';
@@ -338,7 +338,7 @@ trait SendMail
     {
         $logo = DB::table('tbl_web_setting')
             ->first();
-        $app_name = $logo ? $logo->name : 'GoGrocer';
+        $app_name = $logo ? $logo->name : 'Anything Alltime';
         $curr = DB::table('currency')
             ->first();
         $currency_sign = $curr ? $curr->currency_sign : '$';
@@ -356,7 +356,7 @@ trait SendMail
     {
         $logo = DB::table('tbl_web_setting')
             ->first();
-        $app_name = $logo ? $logo->name : 'GoGrocer';
+        $app_name = $logo ? $logo->name : 'Anything Alltime';
         $check = DB::table('admin')
             ->where('email', $email)
             ->first();

@@ -19,7 +19,7 @@ class ContentSeeder extends Seeder
             'about_id' => 1,
             'title' => 'About Us',
             'description' => '<p><strong>About Us</strong><br />
-GoGrocer is an online Delivery Mobile App as a Service. We are committed to nurturing a neutral platform and are helping food establishments maintain high standards through Hyperpure. Food Hygiene Ratings is a coveted mark of quality among our restaurant partners.</p>',
+Anything Alltime is an online Delivery Mobile App as a Service. We are committed to nurturing a neutral platform and are helping food establishments maintain high standards through Hyperpure. Food Hygiene Ratings is a coveted mark of quality among our restaurant partners.</p>',
         ]);
 
         // Terms and conditions page

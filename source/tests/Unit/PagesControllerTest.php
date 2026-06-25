@@ -66,8 +66,8 @@ class PagesControllerTest extends TestCase
     {
         // Create about us page record
         DB::table('aboutuspage')->insert([
-            'title' => 'About GoGrocer',
-            'content' => 'Welcome to GoGrocer, your one-stop grocery solution.',
+            'title' => 'About Anything Alltime',
+            'content' => 'Welcome to Anything Alltime, your one-stop grocery solution.',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -79,8 +79,8 @@ class PagesControllerTest extends TestCase
         $this->assertEquals('1', $response['status']);
         $this->assertEquals('About us', $response['message']);
         $this->assertArrayHasKey('data', $response);
-        $this->assertEquals('About GoGrocer', $response['data']->title);
-        $this->assertEquals('Welcome to GoGrocer, your one-stop grocery solution.', $response['data']->content);
+        $this->assertEquals('About Anything Alltime', $response['data']->title);
+        $this->assertEquals('Welcome to Anything Alltime, your one-stop grocery solution.', $response['data']->content);
     }
 
     /**
@@ -106,7 +106,7 @@ class PagesControllerTest extends TestCase
         // Create terms page record
         DB::table('termspage')->insert([
             'title' => 'Terms and Conditions',
-            'content' => 'These are the terms and conditions for using GoGrocer.',
+            'content' => 'These are the terms and conditions for using Anything Alltime.',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -119,7 +119,7 @@ class PagesControllerTest extends TestCase
         $this->assertEquals('Terms & Condition', $response['message']);
         $this->assertArrayHasKey('data', $response);
         $this->assertEquals('Terms and Conditions', $response['data']->title);
-        $this->assertEquals('These are the terms and conditions for using GoGrocer.', $response['data']->content);
+        $this->assertEquals('These are the terms and conditions for using Anything Alltime.', $response['data']->content);
     }
 
     /**
@@ -163,7 +163,7 @@ class PagesControllerTest extends TestCase
         // Create page with HTML content
         DB::table('aboutuspage')->insert([
             'title' => 'About Us with HTML',
-            'content' => '<h1>Welcome to GoGrocer</h1><p>We are a <strong>modern</strong> grocery delivery service.</p>',
+            'content' => '<h1>Welcome to Anything Alltime</h1><p>We are a <strong>modern</strong> grocery delivery service.</p>',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -174,7 +174,7 @@ class PagesControllerTest extends TestCase
 
         $this->assertEquals('1', $response['status']);
         $this->assertEquals('About us', $response['message']);
-        $this->assertStringContainsString('<h1>Welcome to GoGrocer</h1>', $response['data']->content);
+        $this->assertStringContainsString('<h1>Welcome to Anything Alltime</h1>', $response['data']->content);
         $this->assertStringContainsString('<strong>modern</strong>', $response['data']->content);
     }
 

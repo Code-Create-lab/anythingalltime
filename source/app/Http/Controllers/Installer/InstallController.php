@@ -47,7 +47,7 @@ class InstallController extends Controller
         if ($activate_response['status']) {
 
             Session::put('status', 'active');
-            Session::put('message', 'Activated! Thanks for purchasing GoGrocer Android Package.');
+            Session::put('message', 'Activated! Thanks for purchasing Anything Alltime Android Package.');
             Session::put('license', $request->license);
             Session::put('client', $request->client);
 

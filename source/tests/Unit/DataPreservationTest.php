@@ -54,7 +54,7 @@ class DataPreservationTest extends TestCase
         // Find admin by email instead of hardcoded ID
         $admin = DB::table('admin')->where('email', 'admin@demo.com')->first();
         $this->assertNotNull($admin, 'Default admin account should exist');
-        $this->assertEquals('GoGrocer Admin', $admin->name);
+        $this->assertEquals('Anything Alltime Admin', $admin->name);
         $this->assertEquals('admin@demo.com', $admin->email);
         $this->assertEquals('$2y$10$VD8DroA2J31Zfsvhef3zUO7dwBeLlXMmmggstTzkzsZ6WdgtBC6UK', $admin->password);
 

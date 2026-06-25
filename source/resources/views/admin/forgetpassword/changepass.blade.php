@@ -7,8 +7,7 @@
     <link rel="icon" type="image/png" href="{{url($logo->favicon)}}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<meta name="description" content="GoGrocer Multistore" />
-	<meta name="author" content="Tecmanic" />
+	<meta name="description" content="Anything Alltime Multistore" />
 	
 	<!-- ================== BEGIN core-css ================== -->
 	<link href="{{url('assets/theme_assets/css/app.min.css')}}" rel="stylesheet" />

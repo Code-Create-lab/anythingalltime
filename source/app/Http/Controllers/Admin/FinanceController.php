@@ -119,7 +119,7 @@ class FinanceController extends Controller
             $body = "Subject: Amount Paid\n\n $Msg1 ";
 
             // ...and away we go!
-            $retval = mail($to, 'GoGrocer:Amount paid', $body, $head);
+            $retval = mail($to, 'Anything Alltime:Amount paid', $body, $head);
 
             $welcomeMail = $this->payoutMail($amt, $store_name, $user_email, $app_name);
 

@@ -148,14 +148,14 @@ class ComprehensiveDataSeeder extends Seeder
             'about_id' => 1,
             'title' => 'About Us',
             'description' => '<p><strong>About Us</strong><br />
-GoGrocer is an online Delivery Mobile App as a Service. We are committed to nurturing a neutral platform and are helping food establishments maintain high standards through Hyperpure. Food Hygiene Ratings is a coveted mark of quality among our restaurant partners.</p>',
+Anything Alltime is an online Delivery Mobile App as a Service. We are committed to nurturing a neutral platform and are helping food establishments maintain high standards through Hyperpure. Food Hygiene Ratings is a coveted mark of quality among our restaurant partners.</p>',
         ]);
     }
 
     private function seedAdmin()
     {
         $adminData = [
-            'name' => 'GoGrocer Admin',
+            'name' => 'Anything Alltime Admin',
             'email' => 'admin@demo.com',
             'password' => '$2y$10$VD8DroA2J31Zfsvhef3zUO7dwBeLlXMmmggstTzkzsZ6WdgtBC6UK',
             'created_at' => now(),
@@ -564,11 +564,11 @@ GoGrocer is an online Delivery Mobile App as a Service. We are committed to nurt
     {
         $webData = [
             'icon' => 'images/admin/favicon/favicon.png',
-            'name' => 'GoGrocer',
+            'name' => 'Anything Alltime',
             'favicon' => 'images/admin/favicon/favicon.png',
             'number_limit' => 10,
             'last_loc' => 'Yes',
-            'footer_text' => 'GoGrocer © 2021. All Rights Reserved.',
+            'footer_text' => 'Anything Alltime © 2021. All Rights Reserved.',
             'live_chat' => 'No',
         ];
 

@@ -62,7 +62,7 @@ class ForgotpasswordControllerTest extends TestCase
         // Create default web setting
         DB::table('tbl_web_setting')->insert([
             'icon' => 'icon.png',
-            'name' => 'GoGrocer',
+            'name' => 'Anything Alltime',
             'favicon' => 'favicon.ico',
             'number_limit' => 10,
             'created_at' => now(),

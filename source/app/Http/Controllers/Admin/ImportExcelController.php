@@ -187,6 +187,8 @@ class ImportExcelController extends Controller
                 'base_mrp' => $insert_csv1['base_mrp'],
                 'base_price' => $insert_csv1['base_price'],
                 'description' => $insert_csv1['description'],
+                'ean' => $insert_csv1['ean'],
+                'varient_image' => '',
             ];
             $inserted1 = DB::table('product_varient')->insertGetId($data1);
 
@@ -249,6 +251,8 @@ class ImportExcelController extends Controller
                 'base_mrp' => $insert_csv1['base_mrp'],
                 'base_price' => $insert_csv1['base_price'],
                 'description' => $insert_csv1['description'],
+                'ean' => $insert_csv1['ean'],
+                'varient_image' => '',
             ];
             $inserted1 = DB::table('product_varient')->insertGetId($data1);
 

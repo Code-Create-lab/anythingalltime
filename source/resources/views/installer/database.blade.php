@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>GoGrocer - Installer</title>
+    <title>Anything Alltime - Installer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
@@ -17,7 +17,7 @@
         <div class="container main_body"> <div class="section" >
       <div class="column is-6 is-offset-3">
         <center><h1 class="title" style="padding-top: 20px">
-        GoGrocer Installer
+        Anything Alltime Installer
         </h1><br></center>
         <div class="box">
                     <div class="tabs is-fullwidth">
@@ -87,7 +87,6 @@
   </div>
   <div class="content has-text-centered">
     <p>
-        Made with ❤️ by Tecmanic, LLC. All Rights Reserved. Powered by <a target="_blank" rel="noopener noreferrer" href="https://tecmanic.com/" >Tecmanic</a>.
     </p>
     <br>
   </div>
