@@ -1,0 +1,3 @@
+product_id,quantity,unit,base_mrp,base_price,description,ean
+1,2,kg,230,210,Apples 2kg pack,8901234500035
+1,5,kg,560,499,Apples 5kg pack,8901234500042

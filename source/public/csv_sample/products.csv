@@ -1,0 +1,3 @@
+cat_id,product_name,product_image,quantity,unit,base_mrp,base_price,description,ean,tags
+1,Fresh Apple,apple.png,1,kg,120,99,Crisp red apples,8901234500011,"fruit,fresh"
+1,Toned Milk,milk.png,500,ml,60,55,Pasteurized toned milk,8901234500028,"dairy,drink"
