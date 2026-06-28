@@ -229,11 +229,28 @@
                            <input id="lng" type="hidden" name="lng">
                               <input id="lat" type="hidden" name="lat">
                             <input id="myInput" type="text" class="form-control form-control-lg fs-15px" name="address" placeholder="{{ __('keywords.Store Address')}}">
-                             
+
                         </div>
-                         
+
                       @endif
-          
+                     {{-- Map disabled (no map API key): plain address + MANUAL lat/lng entry. --}}
+                     @if($mapset->mapbox == 0 && $mapset->google_map == 0)
+                        <div class="form-group">
+                           <input type="text" name="address" class="form-control form-control-lg fs-15px" placeholder="{{ __('keywords.Store Address')}}" value="{{old('address')}}">
+                        </div>
+                        <br>
+                        <div class="form-group">
+                           <label>{{ __('keywords.Latitude')}}</label>
+                           <input type="text" name="lat" class="form-control form-control-lg fs-15px" placeholder="{{ __('keywords.Latitude')}}" value="{{old('lat')}}">
+                        </div>
+                        <br>
+                        <div class="form-group">
+                           <label>{{ __('keywords.Longitude')}}</label>
+                           <input type="text" name="lng" class="form-control form-control-lg fs-15px" placeholder="{{ __('keywords.Longitude')}}" value="{{old('lng')}}">
+                        </div>
+                        <br>
+                     @endif
+
   
           <button type="submit" class="btn btn-primary btn-lg btn-block fw-500 mb-3">{{ __('keywords.Sign Up')}}</button>
         </form>

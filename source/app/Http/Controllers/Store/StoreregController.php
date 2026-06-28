@@ -172,8 +172,9 @@ class StoreregController extends Controller
                     $lng = $request->lng ?? 0;
                 }
             } else {
-                $lat = $request->lat;
-                $lng = $request->lng;
+                // Map disabled (no API key): use lat/lng entered manually in the signup form.
+                $lat = $request->lat ?? 0;
+                $lng = $request->lng ?? 0;
             }
 
             $insert = DB::table('store')
