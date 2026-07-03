@@ -21,9 +21,16 @@ trait ImageStoragePicker
             $this->storage_space = 'same_server';
         }
 
-        if ($this->storage_space != 'same_server') {
-            $url_aws = rtrim(Storage::disk($this->storage_space)->url('/'), '/');
+        $bucket = config("filesystems.disks.{$this->storage_space}.bucket");
+
+        if ($this->storage_space != 'same_server' && !empty($bucket)) {
+            // S3/AWS SDK rejects an empty object key, so resolve the URL with a
+            // placeholder key and strip it back off to get the bucket base URL.
+            $placeholder = 'placeholder';
+            $full = Storage::disk($this->storage_space)->url($placeholder);
+            $url_aws = rtrim(substr($full, 0, -strlen($placeholder)), '/');
         } else {
+            // No cloud bucket configured -> fall back to local app URL.
             $url_aws = url('/');
         }
 
