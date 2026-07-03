@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Http\Controllers\Store;
 
@@ -51,7 +51,7 @@ class ByphotoController extends Controller
             ->get();
 
         if ($this->storage_space != 'same_server') {
-            $url_aws = rtrim(Storage::disk($this->storage_space)->url('/'), '/');
+            $url_aws = rtrim(substr(Storage::disk($this->storage_space)->url('placeholder'), 0, -11), '/');
         } else {
             $url_aws = url('/').'/';
         }
@@ -76,7 +76,7 @@ class ByphotoController extends Controller
             ->where('set_id', '1')
             ->first();
         if ($this->storage_space != 'same_server') {
-            $url_aws = rtrim(Storage::disk($this->storage_space)->url('/'), '/');
+            $url_aws = rtrim(substr(Storage::disk($this->storage_space)->url('placeholder'), 0, -11), '/');
         } else {
             $url_aws = url('/').'/';
         }

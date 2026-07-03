@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Http\Controllers\Store;
 
@@ -41,7 +41,7 @@ class DeliveryboyController extends Controller
             ->where('store_delivery_boy.store_id', $store->id)
             ->paginate(10);
         if ($this->storage_space != 'same_server') {
-            $url_aws = rtrim(Storage::disk($this->storage_space)->url('/'), '/');
+            $url_aws = rtrim(substr(Storage::disk($this->storage_space)->url('placeholder'), 0, -11), '/');
         } else {
             $url_aws = url('/').'/';
         }
@@ -230,7 +230,7 @@ class DeliveryboyController extends Controller
             ->first();
 
         if ($this->storage_space != 'same_server') {
-            $url_aws = rtrim(Storage::disk($this->storage_space)->url('/'), '/');
+            $url_aws = rtrim(substr(Storage::disk($this->storage_space)->url('placeholder'), 0, -11), '/');
         } else {
             $url_aws = url('/').'/';
         }

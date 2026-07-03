@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Http\Controllers\Admin;
 
@@ -213,7 +213,7 @@ class AdminController extends Controller
             $this->getImageStorage();
 
             if ($this->storage_space != 'same_server') {
-                $url_aws = rtrim(Storage::disk($this->storage_space)->url('/'), '/');
+                $url_aws = rtrim(substr(Storage::disk($this->storage_space)->url('placeholder'), 0, -11), '/');
                 $filePath = '/category/'.$category_image_name;
                 Storage::disk($this->storage_space)->delete($url_aws.$getCategory->admin_image);
                 Storage::disk($this->storage_space)->put($filePath, fopen($request->file('image'), 'r+'), 'public');

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Http\Controllers\Store;
 
@@ -45,7 +45,7 @@ class SecondaryController extends Controller
             ->get();
 
         if ($this->storage_space != 'same_server') {
-            $url_aws = rtrim(Storage::disk($this->storage_space)->url('/'), '/');
+            $url_aws = rtrim(substr(Storage::disk($this->storage_space)->url('placeholder'), 0, -11), '/');
         } else {
             $url_aws = url('/');
         }
@@ -180,7 +180,7 @@ class SecondaryController extends Controller
             ->get();
 
         if ($this->storage_space != 'same_server') {
-            $url_aws = rtrim(Storage::disk($this->storage_space)->url('/'), '/');
+            $url_aws = rtrim(substr(Storage::disk($this->storage_space)->url('placeholder'), 0, -11), '/');
         } else {
             $url_aws = url('/');
         }

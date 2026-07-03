@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Http\Controllers\Store;
 
@@ -41,7 +41,7 @@ class StoreProductController extends Controller
             ->where('product.added_by', $store->id)
             ->paginate(150);
         if ($this->storage_space != 'same_server') {
-            $url_aws = rtrim(Storage::disk($this->storage_space)->url('/'), '/');
+            $url_aws = rtrim(substr(Storage::disk($this->storage_space)->url('placeholder'), 0, -11), '/');
         } else {
             $url_aws = url('/').'/';
         }
@@ -245,7 +245,7 @@ class StoreProductController extends Controller
             ->where('product_id', $product_id)
             ->get();
         if ($this->storage_space != 'same_server') {
-            $url_aws = rtrim(Storage::disk($this->storage_space)->url('/'), '/');
+            $url_aws = rtrim(substr(Storage::disk($this->storage_space)->url('placeholder'), 0, -11), '/');
         } else {
             $url_aws = url('/').'/';
         }

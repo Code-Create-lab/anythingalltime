@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Http\Controllers\Store;
 
@@ -81,7 +81,7 @@ class UsrnotificationController extends Controller
         $countuser = count($user);
         $date = date('d-m-Y');
         if ($this->storage_space != 'same_server') {
-            $url_aws = rtrim(Storage::disk($this->storage_space)->url('/'), '/');
+            $url_aws = rtrim(substr(Storage::disk($this->storage_space)->url('placeholder'), 0, -11), '/');
         } else {
             $url_aws = url('/');
         }
@@ -207,7 +207,7 @@ class UsrnotificationController extends Controller
         $countstore = count($st);
         $date = date('d-m-Y');
         if ($this->storage_space != 'same_server') {
-            $url_aws = rtrim(Storage::disk($this->storage_space)->url('/'), '/');
+            $url_aws = rtrim(substr(Storage::disk($this->storage_space)->url('placeholder'), 0, -11), '/');
         } else {
             $url_aws = url('/');
         }
