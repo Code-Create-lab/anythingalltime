@@ -130,7 +130,9 @@ class StProductController extends Controller
                     ->first();
 
                 $insert2 = DB::table('store_products')
-                    ->insert(['store_id' => $store->id, 'stock' => 0, 'varient_id' => $prod[$i], 'price' => $pr->base_price, 'mrp' => $pr->base_mrp]);
+                    ->insertGetId(['store_id' => $store->id, 'stock' => 0, 'varient_id' => $prod[$i], 'price' => $pr->base_price, 'mrp' => $pr->base_mrp]);
+                // Legacy row identifier: the panel (delete/stock/price/CSV) keys rows by p_id
+                DB::table('store_products')->where('id', $insert2)->update(['p_id' => $insert2]);
             }
 
             return redirect()->back()->withSuccess(trans('keywords.Added Successfully'));

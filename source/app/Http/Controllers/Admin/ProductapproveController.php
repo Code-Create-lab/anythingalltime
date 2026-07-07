@@ -52,7 +52,9 @@ class ProductapproveController extends Controller
                 ->where('product_id', $getvar->product_id)
                 ->update(['approved' => 1]);
             $insert2 = DB::table('store_products')
-                ->insert(['store_id' => $getvar->added_by, 'stock' => 0, 'varient_id' => $varient_id, 'price' => $getvar->base_price, 'mrp' => $getvar->base_mrp]);
+                ->insertGetId(['store_id' => $getvar->added_by, 'stock' => 0, 'varient_id' => $varient_id, 'price' => $getvar->base_price, 'mrp' => $getvar->base_mrp]);
+            // Legacy row identifier: the store panel keys store_products rows by p_id
+            DB::table('store_products')->where('id', $insert2)->update(['p_id' => $insert2]);
 
             return redirect()->back()->withSuccess(trans('keywords.Approved Successfully'));
         } else {
