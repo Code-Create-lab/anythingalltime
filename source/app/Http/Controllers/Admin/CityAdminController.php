@@ -74,7 +74,7 @@ class CityAdminController extends Controller
             'city' => 'required',
             'id_type' => 'required',
             'id_number' => 'required',
-            'address' => 'required',
+            // 'address' => 'required',
             'images' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
