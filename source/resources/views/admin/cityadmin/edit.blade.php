@@ -128,7 +128,7 @@
                       </div>
                     </div>
                      <div class="row">
-                    @if($mapset->mapbox == 0 && $mapset->google_map == 1)
+                    @if(!($mapset->mapbox == 1 && $mapset->google_map == 0))
                             <div class="col-md-12">
                            <div class="form-group">
                             <label for="autocomplete">{{ __('keywords.CityAdAddress')}} </label>
