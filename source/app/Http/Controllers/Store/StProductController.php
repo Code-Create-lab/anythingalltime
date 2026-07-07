@@ -145,10 +145,21 @@ class StProductController extends Controller
         $check = DB::table('store_products')
             ->where('p_id', $id)
             ->first();
+        // Legacy rows may have p_id NULL; the panel then links with the row id instead
+        $key = 'p_id';
+        if (! $check) {
+            $check = DB::table('store_products')
+                ->where('id', $id)
+                ->first();
+            $key = 'id';
+        }
+        if (! $check) {
+            return redirect()->back()->withErrors(trans('keywords.Something Wents Wrong'));
+        }
         $varient_id = $check->varient_id;
         $store_id = $check->store_id;
         $delete = DB::table('store_products')
-            ->where('p_id', $id)
+            ->where($key, $id)
             ->delete();
         if ($delete) {
             $de = DB::table('store_orders')

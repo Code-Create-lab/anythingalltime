@@ -90,7 +90,7 @@
                     <tr>
                         <td><p>{{$sel->product_name}}({{$sel->quantity}} {{$sel->unit}})</p></td>
                         <td class="td-actions text-right">
-                           <a href="{{route('delete_product', $sel->p_id)}}" rel="tooltip" class="btn btn-danger">
+                           <a href="{{route('delete_product', $sel->p_id ?? $sel->id)}}" rel="tooltip" class="btn btn-danger">
                                 <i class="fa fa-trash"></i>
                             </a>
                         </td>
