@@ -128,30 +128,18 @@
                           </div>
                       </div>
                     </div>
-                     @if(!($mapset->mapbox == 1 && $mapset->google_map == 0))
-                         <div class="row">
+                      <div class="row">
                             <div class="col-md-12">
                            <div class="form-group">
-                            <label for="autocomplete"> {{ __('keywords.CityAdAddress')}} </label>
-                            <input type="text" name="address" id="autocomplete" class="form-control" required>
-                        </div>
-                          </div>
-                      </div>
-                      @endif
-                     @if($mapset->mapbox == 1 && $mapset->google_map == 0) 
-                      <div class="row">                    
-                            <div class="col-md-12">
-                           <div class="form-group">
-                            <label for="autocomplete"> {{ __('keywords.CityAdAddress')}} </label>
+                            <label> {{ __('keywords.CityAdAddress')}} </label>
                        <div class="autocomplete" style="width:100%;">
                            <input id="lng" type="hidden" name="lng">
                               <input id="lat" type="hidden" name="lat">
-                            <input id="myInput" type="text" name="address" placeholder="{{ __('keywords.CityAdAddress')}}" required>
+                            <input id="{{ ($mapset->mapbox == 1 && $mapset->google_map == 0) ? 'myInput' : 'autocomplete' }}" type="text" name="address" class="form-control" placeholder="{{ __('keywords.CityAdAddress')}}" required>
                         </div>
                          </div>
                           </div>
                       </div>
-                      @endif
                       <div class="form-group">
                         <label class="bmd-label-floating" for="exampleInputName1">{{ __('keywords.CityAdminStores')}}</label>
                           <select id='testSelect1'  class="form-control" name="selectedstore[]" multiple>

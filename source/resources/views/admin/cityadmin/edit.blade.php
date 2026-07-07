@@ -128,30 +128,16 @@
                       </div>
                     </div>
                      <div class="row">
-                    @if(!($mapset->mapbox == 1 && $mapset->google_map == 0))
                             <div class="col-md-12">
                            <div class="form-group">
-                            <label for="autocomplete">{{ __('keywords.CityAdAddress')}} </label>
-                            <input id="lng" type="hidden" name="lng">
-                            <input id="lat" type="hidden" name="lat">
-                            <input type="text" name="address" id="autocomplete" class="form-control" value="{{$cityadminers->cityadmin_address}}" required>
-                        </div>
-                          </div>
-                
-                      @endif
-                     @if($mapset->mapbox == 1 && $mapset->google_map == 0) 
-                                       
-                            <div class="col-md-12">
-                           <div class="form-group">
-                            <label for="autocomplete"> {{ __('keywords.CityAdAddress')}} </label>
+                            <label> {{ __('keywords.CityAdAddress')}} </label>
                        <div class="autocomplete" style="width:100%;">
                            <input id="lng" type="hidden" name="lng" value="{{$cityadminers->lng}}">
                               <input id="lat" type="hidden" name="lat" value="{{$cityadminers->lat}}">
-                            <input id="myInput" type="text" name="address" value="{{$cityadminers->cityadmin_address}}" required>
+                            <input id="{{ ($mapset->mapbox == 1 && $mapset->google_map == 0) ? 'myInput' : 'autocomplete' }}" type="text" name="address" class="form-control" value="{{ str_replace('+', ' ', $cityadminers->cityadmin_address) }}" required>
                         </div>
                          </div>
                           </div>
-                      @endif
                  
                     </div>
                     

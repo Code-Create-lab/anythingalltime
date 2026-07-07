@@ -115,12 +115,10 @@ class CityAdminController extends Controller
         } else {
             return redirect()->back()->withErrors('Image missing. Complete required fields before continuing');
         }
-        $address = str_replace(' ', '+', $request->address);
-        $address1 = str_replace('-', '+', $address);
+        $address1 = $request->address;
         $lat = $request->lat;
         $lng = $request->lng;
 
-        $mapset = MapSettings::select('mapbox', 'google_map')->firstOrFail();
         // Manual lat/lng entry: default to 0 when not provided instead of geocoding via map API
         if (! isset($lat) || $lat === '') {
             $lat = 0;
@@ -251,12 +249,10 @@ class CityAdminController extends Controller
             return redirect()->back()->withErrors(trans('keywords.Image Required'));
         }
 
-        $address = str_replace(' ', '+', $request->address);
-        $address1 = str_replace('-', '+', $address);
+        $address1 = $request->address;
         $lat = $request->lat;
         $lng = $request->lng;
 
-        $mapset = MapSettings::select('mapbox', 'google_map')->firstOrFail();
         // Manual lat/lng entry: default to 0 when not provided instead of geocoding via map API
         if (! isset($lat) || $lat === '') {
             $lat = 0;
