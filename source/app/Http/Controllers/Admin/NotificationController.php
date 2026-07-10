@@ -195,7 +195,7 @@ class NotificationController extends Controller
                 $image_name = $image->getClientOriginalName();
                 $image = $request->file('image');
                 $filePath = '/notification/'.$image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('image'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('image'), 'r+'));
                 $notify_image = $url_aws.$filePath;
             } else {
 
@@ -320,7 +320,7 @@ class NotificationController extends Controller
                 $image_name = $image->getClientOriginalName();
                 $image = $request->file('notify_image');
                 $filePath = '/notification/'.$image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('notify_image'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('notify_image'), 'r+'));
                 $notify_image = $url_aws.$filePath;
             } else {
 
@@ -440,7 +440,7 @@ class NotificationController extends Controller
                 $image_name = $image->getClientOriginalName();
                 $image = $request->file('notify_image');
                 $filePath = '/notification/'.$image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('notify_image'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('notify_image'), 'r+'));
                 $notify_image = $url_aws.$filePath;
             } else {
 

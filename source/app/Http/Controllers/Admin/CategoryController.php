@@ -143,7 +143,7 @@ class CategoryController extends Controller
                 $category_image_name = $category_image->getClientOriginalName();
                 $category_image = $request->file('cat_image');
                 $filePath = '/category/'.$category_image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('cat_image'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('cat_image'), 'r+'));
             } else {
 
                 $category_image->move('images/category/'.$date.'/', $fileName);
@@ -302,7 +302,7 @@ class CategoryController extends Controller
                 $url_aws = rtrim(substr(Storage::disk($this->storage_space)->url('placeholder'), 0, -11), '/');
                 $filePath = '/category/'.$category_image_name;
                 Storage::disk($this->storage_space)->delete($url_aws.$getCategory->image);
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('cat_image'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('cat_image'), 'r+'));
             } else {
                 $fileName = $category_image->getClientOriginalName();
                 $fileName = str_replace(' ', '-', $fileName);

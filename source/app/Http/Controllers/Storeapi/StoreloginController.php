@@ -173,7 +173,7 @@ class StoreloginController extends Controller
                 $image_name = $image->getClientOriginalName();
                 $image = $request->file('store_photo');
                 $user_image = '/store/'.$image_name;
-                Storage::disk($this->storage_space)->put($user_image, fopen($request->file('store_photo'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($user_image, fopen($request->file('store_photo'), 'r+'));
             } else {
 
                 $image->move('images/store/'.$date.'/', $fileName);

@@ -105,7 +105,7 @@ class AdminController extends Controller
                 $category_image_name = $category_image->getClientOriginalName();
                 $category_image = $request->file('image');
                 $filePath = '/category/'.$category_image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('image'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('image'), 'r+'));
             } else {
 
                 $category_image->move('images/category/'.$date.'/', $fileName);
@@ -216,7 +216,7 @@ class AdminController extends Controller
                 $url_aws = rtrim(substr(Storage::disk($this->storage_space)->url('placeholder'), 0, -11), '/');
                 $filePath = '/category/'.$category_image_name;
                 Storage::disk($this->storage_space)->delete($url_aws.$getCategory->admin_image);
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('image'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('image'), 'r+'));
             } else {
                 $fileName = $category_image->getClientOriginalName();
                 $fileName = str_replace(' ', '-', $fileName);

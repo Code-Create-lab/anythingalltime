@@ -102,7 +102,7 @@ class DeliveryboyController extends Controller
                 $image_name = $image->getClientOriginalName();
                 $image = $request->file('images');
                 $filePath = '/dboy/'.$image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('images'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('images'), 'r+'));
             } else {
 
                 $image->move('images/dboy/'.$date.'/', $fileName);
@@ -277,7 +277,7 @@ class DeliveryboyController extends Controller
                 $image_name = $image->getClientOriginalName();
                 $image = $request->file('image');
                 $filePath = '/coupon/'.$image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('image'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('image'), 'r+'));
             } else {
 
                 $image->move('images/coupon/'.$date.'/', $fileName);
@@ -407,7 +407,7 @@ class DeliveryboyController extends Controller
             ->leftJoin('delivery_boy', 'orders.dboy_id', '=', 'delivery_boy.dboy_id')
             ->select('delivery_boy.boy_name', 'delivery_boy.boy_phone', DB::raw('Count(orders.cart_id) as count'))
             ->groupBy('delivery_boy.boy_name', 'delivery_boy.boy_phone')
-            ->whereDate('orders.delivery_date', '>', Carbon::now()->subDays(30))
+            ->whereDate('orders.delivery_date', '>', carbon::now()->subDays(30))
             ->where('orders.payment_method', '!=', null)
             ->where('orders.order_status', 'Completed')
             ->orderBy('count', 'desc')
@@ -430,7 +430,7 @@ class DeliveryboyController extends Controller
             ->select('users.user_id', 'users.user_phone', 'users.user_name', DB::raw('Count(orders.cart_id) as count'))
             ->groupBy('users.user_id', 'users.user_phone', 'users.user_name')
             ->where('orders.store_id', $store->id)
-            ->whereMonth('orders.delivery_date', '=', Carbon::now()->subMonth()->month)
+            ->whereMonth('orders.delivery_date', '=', carbon::now()->subMonth()->month)
             ->where('orders.payment_method', '!=', null)
             ->where('orders.order_status', 'Completed')
             ->orderBy('count', 'asc')

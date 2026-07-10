@@ -76,7 +76,7 @@ class ProfileController extends Controller
                 $image_name = $image->getClientOriginalName();
                 $image = $request->file('admin_image');
                 $filePath = '/admin/'.$image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('admin_image'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('admin_image'), 'r+'));
             } else {
 
                 $image->move('images/admin/'.$date.'/', $fileName);
@@ -93,7 +93,7 @@ class ProfileController extends Controller
 
         if ($adminChangeProfile) {
 
-            session::put('bamaAdmin', $admin_email);
+            Session::put('bamaAdmin', $admin_email);
 
             return redirect()->back()->withSuccess(trans('keywords.Updated Successfully'));
         } else {

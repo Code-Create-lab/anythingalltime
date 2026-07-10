@@ -100,7 +100,7 @@ class RegController extends Controller
                     $image_name = $image->getClientOriginalName();
                     $image = $request->file('profile');
                     $filePath = '/store/'.$image_name;
-                    Storage::disk($this->storage_space)->put($filePath, fopen($request->file('profile'), 'r+'), 'public');
+                    Storage::disk($this->storage_space)->put($filePath, fopen($request->file('profile'), 'r+'));
                 } else {
 
                     $image->move('images/store/'.$date.'/', $fileName);
@@ -120,7 +120,7 @@ class RegController extends Controller
                     $image_name = $id_img->getClientOriginalName();
                     $id_img = $request->file('id_img');
                     $filePath11 = '/store/'.$image_name;
-                    Storage::disk($this->storage_space)->put($filePath11, fopen($request->file('id_img'), 'r+'), 'public');
+                    Storage::disk($this->storage_space)->put($filePath11, fopen($request->file('id_img'), 'r+'));
                 } else {
 
                     $id_img->move('images/store/'.$date.'/', $fileName);

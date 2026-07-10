@@ -87,11 +87,99 @@ use App\Http\Controllers\Store\StProductController;
 use App\Http\Controllers\Store\StRequiredController;
 use App\Http\Controllers\Store\StSalesreportController;
 use App\Http\Controllers\Store\UsrnotificationController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 Route::get('/clear-all', [InstallController::class, 'clearAll'])->name('clearAll');
 
 Route::get('verifyLicense', [InstallController::class, 'verifyLicense'])->name('verifyLicense');
+
+// Diagnostic route: verifies S3 connectivity (write/read/url/delete) for the disk
+// enabled in the image_space table. Force a disk with ?disk=aws or ?disk=digitalocean.
+Route::get('/s3-test', function (Request $request) {
+    $results = [];
+    $step = 'resolve_disk';
+    $started = microtime(true);
+
+    try {
+        $requested = $request->query('disk');
+        if (in_array($requested, ['aws', 'digitalocean'], true)) {
+            $disk = 's3.'.$requested;
+        } else {
+            $space = DB::table('image_space')->first();
+            if ($space && $space->aws == 1) {
+                $disk = 's3.aws';
+            } elseif ($space && $space->digital_ocean == 1) {
+                $disk = 's3.digitalocean';
+            } else {
+                return response()->json([
+                    'status' => 'skipped',
+                    'message' => 'No S3 storage enabled in image_space table. Force a disk with ?disk=aws or ?disk=digitalocean.',
+                ]);
+            }
+        }
+
+        $config = config("filesystems.disks.{$disk}", []);
+        $results['disk'] = $disk;
+        $results['config'] = [
+            'driver' => $config['driver'] ?? null,
+            'key' => empty($config['key']) ? '(empty)' : substr($config['key'], 0, 4).'****',
+            'secret' => empty($config['secret']) ? '(empty)' : '(set)',
+            'region' => $config['region'] ?? null,
+            'bucket' => $config['bucket'] ?? null,
+            'endpoint' => $config['endpoint'] ?? null,
+        ];
+
+        $storage = Storage::disk($disk);
+        $path = 's3-test/'.now()->format('Ymd_His').'_'.Str::random(6).'.txt';
+        $payload = 'gogrocer s3 connection test '.now()->toDateTimeString();
+
+        // No visibility arg — bucket keeps ACLs disabled; public read comes
+        // from the bucket policy, which the public_url_read step verifies.
+        $step = 'write';
+        $results['write'] = $storage->put($path, $payload) ? 'ok' : 'failed';
+
+        $step = 'exists';
+        $results['exists'] = $storage->exists($path) ? 'ok' : 'failed';
+
+        $step = 'read';
+        $results['read'] = $storage->get($path) === $payload ? 'ok' : 'content mismatch';
+
+        $step = 'url';
+        $results['url'] = $storage->url($path);
+
+        $step = 'public_url_read';
+        $anonymous = @file_get_contents($results['url']);
+        $results['public_url_read'] = $anonymous === $payload ? 'ok' : 'failed (bucket policy does not allow public read)';
+
+        $step = 'delete';
+        $results['delete'] = $storage->delete($path) ? 'ok' : 'failed';
+
+        $results['time_ms'] = round((microtime(true) - $started) * 1000);
+
+        $failed = $results['read'] !== 'ok'
+            || $results['public_url_read'] !== 'ok'
+            || in_array('failed', [$results['write'], $results['exists'], $results['delete']], true);
+
+        return response()->json([
+            'status' => $failed ? 'failed' : 'connected',
+            'results' => $results,
+        ], $failed ? 500 : 200);
+    } catch (Throwable $e) {
+        $results['time_ms'] = round((microtime(true) - $started) * 1000);
+
+        return response()->json([
+            'status' => 'error',
+            'failed_step' => $step,
+            'exception' => get_class($e),
+            'error' => $e->getMessage(),
+            'results' => $results,
+        ], 500);
+    }
+})->name('s3Test');
 
 Route::group(['middleware' => ['verifylicense']], function () {
     Route::get('installFinish', [InstallController::class, 'installFinish'])->name('installFinish');

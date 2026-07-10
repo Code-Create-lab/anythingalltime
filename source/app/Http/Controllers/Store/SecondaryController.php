@@ -127,7 +127,7 @@ class SecondaryController extends Controller
                 $image_name = $image->getClientOriginalName();
                 $image = $request->file('image');
                 $filePath = '/banner/'.$image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('image'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('image'), 'r+'));
             } else {
                 $image->move('images/banner/'.$date.'/', $fileName);
                 $filePath = '/images/banner/'.$date.'/'.$fileName;
@@ -252,7 +252,7 @@ class SecondaryController extends Controller
                 $image_name = $image->getClientOriginalName();
                 $image = $request->file('image');
                 $filePath = '/banner/'.$image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('image'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('image'), 'r+'));
             } else {
 
                 $image->move('images/banner/'.$date.'/', $fileName);

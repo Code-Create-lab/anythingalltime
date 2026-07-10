@@ -24,11 +24,14 @@ use App\Models\User;
 use App\Models\WebSetting;
 use App\Setting;
 use App\Traits\ImageStoragePicker;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 
 class SettingsController extends Controller
 {
@@ -60,7 +63,7 @@ class SettingsController extends Controller
     /**
      * Display application settings details
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function app_details(Request $request)
     {
@@ -272,7 +275,7 @@ class SettingsController extends Controller
                 $image_name = $image->getClientOriginalName();
                 $image = $request->file('app_icon');
                 $filePath = '/app_icon/'.$image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('app_icon'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('app_icon'), 'r+'));
             } else {
                 $image->move('images/app_logo/app_icon/'.$date.'/', $fileName);
                 $filePath = '/images/app_logo/app_icon/'.$date.'/'.$fileName;
@@ -290,7 +293,7 @@ class SettingsController extends Controller
                     $image_name = $image->getClientOriginalName();
                     $image = $request->file('favicon');
                     $filePath1 = '/favicon/'.$image_name;
-                    Storage::disk($this->storage_space)->put($filePath1, fopen($request->file('favicon'), 'r+'), 'public');
+                    Storage::disk($this->storage_space)->put($filePath1, fopen($request->file('favicon'), 'r+'));
                 } else {
                     $image->move('images/app_logo/favicon/'.$date.'/', $fileName);
                     $filePath1 = '/images/app_logo/favicon/'.$date.'/'.$fileName;
@@ -308,7 +311,7 @@ class SettingsController extends Controller
                     $image_name = $image->getClientOriginalName();
                     $image = $request->file('favicon');
                     $filePath1 = '/favicon/'.$image_name;
-                    Storage::disk($this->storage_space)->put($filePath1, fopen($request->file('favicon'), 'r+'), 'public');
+                    Storage::disk($this->storage_space)->put($filePath1, fopen($request->file('favicon'), 'r+'));
                 } else {
                     $image->move('images/app_logo/favicon/'.$date.'/', $fileName);
                     $filePath1 = '/images/app_logo/favicon/'.$date.'/'.$fileName;
@@ -427,7 +430,7 @@ class SettingsController extends Controller
     /**
      * Update Firebase Cloud Messaging configuration
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function updatefcm(Request $request)
     {
@@ -458,7 +461,7 @@ class SettingsController extends Controller
                 ->back()
                 ->withSuccess(trans('keywords.Updated Successfully'));
 
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             return redirect()
                 ->back()
                 ->withErrors($e->errors());

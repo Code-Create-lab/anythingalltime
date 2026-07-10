@@ -457,7 +457,7 @@ class UserController extends Controller
                 $image_name = $image->getClientOriginalName();
                 $image = $request->file('user_image');
                 $filePath = '/user/'.$image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('user_image'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('user_image'), 'r+'));
             } else {
 
                 $image->move('images/user/'.$date.'/', $fileName);
@@ -882,7 +882,7 @@ class UserController extends Controller
                     $image_name = $image->getClientOriginalName();
                     $image = $request->file('user_image');
                     $filePath = '/user/'.$image_name;
-                    Storage::disk($this->storage_space)->put($filePath, fopen($request->file('user_image'), 'r+'), 'public');
+                    Storage::disk($this->storage_space)->put($filePath, fopen($request->file('user_image'), 'r+'));
                 } else {
 
                     $image->move('images/user/'.$date.'/', $fileName);

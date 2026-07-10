@@ -176,7 +176,7 @@ class CityAdStoreController extends Controller
                 $image_name = $image->getClientOriginalName();
                 $image = $request->file('image');
                 $filePath = '/store/'.$image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('image'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('image'), 'r+'));
             } else {
                 $image->move('images/store/'.$date.'/', $fileName);
                 $filePath = '/images/store/'.$date.'/'.$fileName;
@@ -196,7 +196,7 @@ class CityAdStoreController extends Controller
                 $image_name = $id_img->getClientOriginalName();
                 $id_img = $request->file('id_img');
                 $filePath11 = '/store/'.$image_name;
-                Storage::disk($this->storage_space)->put($filePath11, fopen($request->file('id_img'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath11, fopen($request->file('id_img'), 'r+'));
             } else {
                 $id_img->move('images/store/'.$date.'/', $fileName);
                 $filePath11 = '/images/store/'.$date.'/'.$fileName;
@@ -401,7 +401,7 @@ class CityAdStoreController extends Controller
                 $image_name = $image->getClientOriginalName();
                 $image = $request->file('image');
                 $filePath = '/store/'.$image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('image'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('image'), 'r+'));
             } else {
                 $image->move('images/store/'.$date.'/', $fileName);
                 $filePath = '/images/store/'.$date.'/'.$fileName;
@@ -428,7 +428,7 @@ class CityAdStoreController extends Controller
                 $image_name = $id_img->getClientOriginalName();
                 $id_img = $request->file('id_img');
                 $filePath11 = '/store/'.$image_name;
-                Storage::disk($this->storage_space)->put($filePath11, fopen($request->file('id_img'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath11, fopen($request->file('id_img'), 'r+'));
             } else {
                 $id_img->move('images/store/'.$date.'/', $fileName11);
                 $filePath11 = '/images/store/'.$date.'/'.$fileName11;

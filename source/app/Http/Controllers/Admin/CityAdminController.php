@@ -107,7 +107,7 @@ class CityAdminController extends Controller
                 $image_name = $image->getClientOriginalName();
                 $image = $request->file('images');
                 $filePath = '/cityadmin/'.$image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('images'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('images'), 'r+'));
             } else {
                 $image->move('images/cityadmin/'.$date.'/', $fileName);
                 $filePath = '/images/cityadmin/'.$date.'/'.$fileName;
@@ -240,7 +240,7 @@ class CityAdminController extends Controller
                 $image_name = $image->getClientOriginalName();
                 $image = $request->file('images');
                 $filePath = '/cityadmin/'.$image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('images'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('images'), 'r+'));
             } else {
                 $image->move('images/cityadmin/'.$date.'/', $fileName);
                 $filePath = '/images/cityadmin/'.$date.'/'.$fileName;

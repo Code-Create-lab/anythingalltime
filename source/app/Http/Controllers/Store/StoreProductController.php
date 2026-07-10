@@ -141,7 +141,7 @@ class StoreProductController extends Controller
                 $product_image_name = $product_image->getClientOriginalName();
                 $product_image = $request->file('product_image');
                 $filePath = '/product/'.$product_image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('product_image'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('product_image'), 'r+'));
             } else {
                 $product_image->move('images/product/'.$date.'/', $fileName);
                 $filePath = '/images/product/'.$date.'/'.$fileName;
@@ -203,7 +203,7 @@ class StoreProductController extends Controller
                         $product_image_name = $image->getClientOriginalName();
                         $product_image = $request->file('product_image');
                         $filePath1 = '/product/'.$product_image_name;
-                        Storage::disk($this->storage_space)->put($filePath1, fopen($image, 'r+'), 'public');
+                        Storage::disk($this->storage_space)->put($filePath1, fopen($image, 'r+'));
                     } else {
 
                         $image->move('images/product/'.$date.'/', $fileName);
@@ -303,7 +303,7 @@ class StoreProductController extends Controller
                 $product_image_name = $product_image->getClientOriginalName();
                 $product_image = $request->file('product_image');
                 $filePath = '/product/'.$product_image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('product_image'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('product_image'), 'r+'));
             } else {
 
                 $product_image->move('images/product/'.$date.'/', $fileName);
@@ -366,7 +366,7 @@ class StoreProductController extends Controller
                     $product_image_name = $image->getClientOriginalName();
                     $product_image = $request->file('product_image');
                     $filePath1 = '/product/'.$product_image_name;
-                    Storage::disk($this->storage_space)->put($filePath1, fopen($image, 'r+'), 'public');
+                    Storage::disk($this->storage_space)->put($filePath1, fopen($image, 'r+'));
                 } else {
 
                     $image->move('images/product/'.$date.'/', $fileName);

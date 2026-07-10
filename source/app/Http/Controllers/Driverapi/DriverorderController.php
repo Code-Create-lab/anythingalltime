@@ -403,7 +403,7 @@ class DriverorderController extends Controller
                 $category_image_name = $user_signature->getClientOriginalName();
                 $user_signature = $request->file('user_signature');
                 $filePath = '/signature/'.$category_image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('user_signature'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('user_signature'), 'r+'));
             } else {
 
                 $user_signature->move('images/users/'.$date.'/', $fileName);

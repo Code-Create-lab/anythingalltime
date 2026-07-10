@@ -96,7 +96,7 @@ class DeliveryController extends Controller
                 $image_name = $image->getClientOriginalName();
                 $image = $request->file('images');
                 $filePath = '/dboy/'.$image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('images'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('images'), 'r+'));
             } else {
                 $image->move('images/dboy/'.$date.'/', $fileName);
                 $filePath = '/images/dboy/'.$date.'/'.$fileName;
@@ -341,7 +341,7 @@ class DeliveryController extends Controller
                 $image_name = $image->getClientOriginalName();
                 $image = $request->file('image');
                 $filePath = '/coupon/'.$image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('image'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('image'), 'r+'));
             } else {
                 $image->move('images/coupon/'.$date.'/', $fileName);
                 $filePath = '/images/coupon/'.$date.'/'.$fileName;
@@ -436,7 +436,7 @@ class DeliveryController extends Controller
             ->leftJoin('delivery_boy', 'orders.dboy_id', '=', 'delivery_boy.dboy_id')
             ->select('delivery_boy.boy_name', 'delivery_boy.boy_phone', DB::raw('Count(orders.cart_id) as count'))
             ->groupBy('delivery_boy.boy_name', 'delivery_boy.boy_phone')
-            ->whereDate('orders.delivery_date', '>', Carbon::now()->subDays(30))
+            ->whereDate('orders.delivery_date', '>', carbon::now()->subDays(30))
             ->where('orders.payment_method', '!=', null)
             ->where('orders.order_status', 'Completed')
             ->orderBy('count', 'desc')
@@ -449,7 +449,7 @@ class DeliveryController extends Controller
             ->leftJoin('store', 'orders.store_id', '=', 'store.id')
             ->select('store.store_name', 'store.phone_number', DB::raw('Count(orders.cart_id) as count'))
             ->groupBy('store.store_name', 'store.phone_number')
-            ->whereDate('orders.delivery_date', '>', Carbon::now()->subDays(30))
+            ->whereDate('orders.delivery_date', '>', carbon::now()->subDays(30))
             ->where('orders.payment_method', '!=', null)
             ->where('orders.order_status', 'Completed')
             ->orderBy('count', 'desc')
@@ -470,7 +470,7 @@ class DeliveryController extends Controller
             ->join('orders', 'users.id', '=', 'orders.user_id')
             ->select('users.id', 'users.user_phone', 'users.name', DB::raw('Count(orders.cart_id) as count'))
             ->groupBy('users.id', 'users.user_phone', 'users.name')
-            ->whereMonth('orders.delivery_date', '=', Carbon::now()->subMonth()->month)
+            ->whereMonth('orders.delivery_date', '=', carbon::now()->subMonth()->month)
             ->where('orders.payment_method', '!=', null)
             ->where('orders.order_status', 'Completed')
             ->orderBy('count', 'asc')

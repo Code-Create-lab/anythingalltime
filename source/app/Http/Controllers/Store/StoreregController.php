@@ -94,7 +94,7 @@ class StoreregController extends Controller
             $image_name = $image->getClientOriginalName();
             $image = $request->file('store_doc');
             $filePath = '/store/'.$image_name;
-            Storage::disk($this->storage_space)->put($filePath, fopen($request->file('store_doc'), 'r+'), 'public');
+            Storage::disk($this->storage_space)->put($filePath, fopen($request->file('store_doc'), 'r+'));
         } else {
             $image->move('images/store_doc/'.$date.'/', $fileName);
             $filePath = '/images/store_doc/'.$date.'/'.$fileName;
@@ -109,7 +109,7 @@ class StoreregController extends Controller
                 $image_name1 = $image1->getClientOriginalName();
                 $image1 = $request->file('image');
                 $filePath1 = '/store/'.$image_name1;
-                Storage::disk($this->storage_space)->put($filePath1, fopen($request->file('image'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath1, fopen($request->file('image'), 'r+'));
             } else {
 
                 $image->move('images/store/'.$date.'/', $fileName1);

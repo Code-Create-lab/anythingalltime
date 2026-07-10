@@ -99,7 +99,7 @@ class CityAdDBoyController extends Controller
                 $image_name = $image->getClientOriginalName();
                 $image = $request->file('images');
                 $filePath = '/dboy/'.$image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('images'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('images'), 'r+'));
             } else {
                 $image->move('images/dboy/'.$date.'/', $fileName);
                 $filePath = '/images/dboy/'.$date.'/'.$fileName;
@@ -245,7 +245,7 @@ class CityAdDBoyController extends Controller
                 $image_name = $image->getClientOriginalName();
                 $image = $request->file('image');
                 $filePath = '/dboy/'.$image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('image'), 'r+'), 'public');
+                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('image'), 'r+'));
             } else {
                 $image->move('images/dboy/'.$date.'/', $fileName);
                 $filePath = '/images/dboy/'.$date.'/'.$fileName;
