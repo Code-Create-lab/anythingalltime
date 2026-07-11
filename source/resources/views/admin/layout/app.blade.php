@@ -15,46 +15,15 @@
     <link href="{{url('assets/theme_assets/css/app.min.css')}}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/3.0.2/iconfont/material-icons.min.css" integrity="sha512-y9glprRcVESvYY3suAqBUYXx0ySbQNvbzzgvLy9F2o38Y7XCNeq/No2gnHjV3+Rjyq5ijoPZRMXotpdw6jcG4g==" crossorigin="anonymous" />
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Nunito', sans-serif;
-        }
-        .card-header.card-header-primary {
-          padding: 10px !important;
-        }
-        .alert {
-          padding: 6px !important;
-        }
-        .dataTables_info{
-          display:none;
-        }
-        .page-item.active .page-link {
-          color: #fff!important;
-          background-color: gray;
-          border-color: gray;
-          z-index: 0 !important;
-        }
-        .app-footer-fixed .app-footer {
-          z-index: 999 !important;
-        }
-
-        .app-sidebar .menu .menu-item.active:not(.has-sub)>.menu-link {
-          color: #1f6bff;
-          background-color: white !important;
-          font-weight: 600;
-          background: 0 0;
-        }
-        .material-icons{
-          margin-top:0px !important;
-          margin-bottom:0px !important;
-        }
-      </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="{{url('assets/theme_assets/plugins/datatables.net-bs4/css/dataTables.bootstrap4.min.css')}}" rel="stylesheet" />
     <link href="{{url('assets/theme_assets/plugins/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css')}}" rel="stylesheet" />
     <link href="{{url('assets/theme_assets/plugins/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css')}}" rel="stylesheet" />
     <link href="{{url('assets/theme_assets/plugins/bootstrap-table/dist/bootstrap-table.min.css')}}" rel="stylesheet" />
     @yield('preload-section')
+    <link href="{{url('assets/theme_assets/css/admin-pro.css')}}" rel="stylesheet" /> {{-- GoGrocer Pro theme: must stay last to override every stylesheet above --}}
       @livewireStyles
       @powerGridStyles
   </head>
@@ -64,21 +33,19 @@
       @include('admin.layout.sidebar')
      <!-- BEGIN #content -->
 		<div id="content" class="app-content">
-        <div class="row">
-        	<div class="col-md-7">
-			<h1 class="page-header mb-3">
-				Hi, {{$admin->name}}. <small>{{ __('keywords.Here is your admin panel')}}.</small>
-
+        <div class="row align-items-center mb-3">
+        	<div class="col-md-8">
+			<h1 class="page-header mb-0">
+				Hi, {{$admin->name}} <small class="d-block d-sm-inline mt-1">{{ __('keywords.Here is your admin panel')}}.</small>
 			</h1></div>
-			<div class="col-md-5" align="right">
-            <div class="col-md-4" align="right">
-                <select class="form-control changeLang">
+			<div class="col-md-4 mt-2 mt-md-0 d-flex justify-content-md-end">
+                <select class="form-control changeLang" style="max-width: 160px;" aria-label="Change language">
                     <option value="en" {{ session()->get('locale') == 'en'||config('app.locale')=="en" ? 'selected' : '' }}>English</option>
                     <option value="bu" {{ session()->get('locale') == 'bu'||config('app.locale')=="bu" ? 'selected' : '' }}>Bulgarian</option>
                     <option value="in" {{ session()->get('locale') == 'in'||config('app.locale')=="in" ? 'selected' : '' }}>Hindi</option>
                      <option value="ch" {{ session()->get('locale') == 'ch'||config('app.locale')=="ch" ? 'selected' : '' }}>Chinese</option>
                 </select>
-            </div></div></div>
+            </div></div>
                  @yield('content')
              </div>
         <!--footer-->

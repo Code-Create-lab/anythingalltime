@@ -1,0 +1,669 @@
+/* ==========================================================================
+   GoGrocer Admin Pro Theme
+   Loaded after app.min.css + tailwind so these rules win the cascade.
+   Design tokens: Data-Dense Dashboard style — indigo primary, amber accent.
+   ========================================================================== */
+
+:root {
+    --gg-primary: #1E40AF;
+    --gg-primary-600: #1D4ED8;
+    --gg-primary-soft: #EFF4FF;
+    --gg-secondary: #3B82F6;
+    --gg-accent: #D97706;
+    --gg-accent-soft: #FEF3E2;
+    --gg-bg: #F8FAFC;
+    --gg-surface: #FFFFFF;
+    --gg-fg: #1E293B;
+    --gg-heading: #0F1C3F;
+    --gg-muted: #64748B;
+    --gg-border: #E2E8F0;
+    --gg-success: #059669;
+    --gg-success-soft: #ECFDF5;
+    --gg-warning: #D97706;
+    --gg-warning-soft: #FFFBEB;
+    --gg-danger: #DC2626;
+    --gg-danger-soft: #FEF2F2;
+    --gg-info-soft: #EFF6FF;
+    --gg-sidebar-bg: #0B1437;
+    --gg-sidebar-bg-2: #101C44;
+    --gg-sidebar-fg: rgba(255, 255, 255, 0.72);
+    --gg-radius: 14px;
+    --gg-radius-sm: 8px;
+    --gg-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(15, 23, 42, 0.06);
+    --gg-shadow-lg: 0 10px 30px -12px rgba(15, 28, 63, 0.25);
+    --gg-font: 'Fira Sans', 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --gg-font-mono: 'Fira Code', 'SFMono-Regular', Consolas, monospace;
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+body {
+    font-family: var(--gg-font) !important;
+    background-color: var(--gg-bg);
+    color: var(--gg-fg);
+}
+
+h1, h2, h3, h4, h5, h6, .page-header {
+    font-family: var(--gg-font);
+    color: var(--gg-heading);
+    font-weight: 700;
+}
+
+a {
+    color: var(--gg-primary-600);
+}
+
+a:hover {
+    color: var(--gg-primary);
+}
+
+.app-content {
+    background-color: var(--gg-bg);
+}
+
+.page-header {
+    font-size: 22px;
+    letter-spacing: -0.01em;
+}
+
+.page-header small {
+    color: var(--gg-muted);
+    font-weight: 400;
+}
+
+/* Numbers in KPIs / tables: monospaced tabular figures, no layout shift */
+.gg-num {
+    font-family: var(--gg-font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+}
+
+/* Visible keyboard focus everywhere */
+a:focus-visible,
+button:focus-visible,
+.btn:focus-visible,
+.form-control:focus-visible {
+    outline: 2px solid var(--gg-secondary);
+    outline-offset: 2px;
+}
+
+/* Thin neutral scrollbars */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 8px;
+    border: 2px solid var(--gg-bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+}
+
+/* --------------------------------------------------------------------------
+   Header
+   -------------------------------------------------------------------------- */
+.app-header {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--gg-border);
+    box-shadow: none;
+}
+
+.app-header .brand {
+    background: transparent;
+}
+
+.app-header .menu-toggler .bar {
+    background: var(--gg-heading);
+}
+
+.app-header .menu-text {
+    color: var(--gg-fg);
+    font-weight: 500;
+}
+
+.app-header .menu-img.online::before {
+    background: var(--gg-success);
+}
+
+.app-header .dropdown-menu {
+    border: 1px solid var(--gg-border);
+    border-radius: var(--gg-radius-sm);
+    box-shadow: var(--gg-shadow-lg);
+    padding: 6px;
+}
+
+.app-header .dropdown-item {
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-weight: 500;
+    color: var(--gg-fg);
+}
+
+.app-header .dropdown-item:hover {
+    background: var(--gg-primary-soft);
+    color: var(--gg-primary);
+}
+
+/* --------------------------------------------------------------------------
+   Sidebar — dark indigo, light text, pill active state
+   -------------------------------------------------------------------------- */
+.app-sidebar,
+.app-sidebar-content {
+    background: linear-gradient(180deg, var(--gg-sidebar-bg) 0%, var(--gg-sidebar-bg-2) 100%) !important;
+}
+
+.app-sidebar .menu-header {
+    color: rgba(255, 255, 255, 0.38) !important;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding-top: 18px;
+}
+
+.app-sidebar .menu-divider {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.app-sidebar .menu .menu-item > .menu-link {
+    color: var(--gg-sidebar-fg) !important;
+    border-radius: 10px;
+    margin: 1px 10px;
+    padding: 9px 12px;
+    font-weight: 500;
+    transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+.app-sidebar .menu .menu-item > .menu-link .menu-icon,
+.app-sidebar .menu .menu-item > .menu-link .menu-icon i {
+    color: rgba(255, 255, 255, 0.55) !important;
+    transition: color 0.18s ease;
+}
+
+.app-sidebar .menu .menu-item > .menu-link:hover {
+    color: #FFFFFF !important;
+    background: rgba(255, 255, 255, 0.07) !important;
+}
+
+.app-sidebar .menu .menu-item > .menu-link:hover .menu-icon i {
+    color: #FFFFFF !important;
+}
+
+/* Active item: solid primary pill (overrides old white-background rule) */
+.app-sidebar .menu .menu-item.active:not(.has-sub) > .menu-link,
+.app-sidebar .menu .menu-item.active:not(.has-sub) > .menu-link:hover {
+    color: #FFFFFF !important;
+    background: linear-gradient(90deg, var(--gg-primary-600), var(--gg-secondary)) !important;
+    box-shadow: 0 6px 16px -6px rgba(59, 130, 246, 0.55);
+    font-weight: 600;
+}
+
+.app-sidebar .menu .menu-item.active:not(.has-sub) > .menu-link .menu-icon i {
+    color: #FFFFFF !important;
+}
+
+.app-sidebar .menu .menu-item.active.has-sub > .menu-link {
+    color: #FFFFFF !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+}
+
+.app-sidebar .menu .menu-item .menu-caret,
+.app-sidebar .menu .menu-item .menu-caret b.caret {
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.app-sidebar .menu-submenu {
+    background: rgba(0, 0, 0, 0.22) !important;
+    border-radius: 10px;
+    margin: 2px 10px;
+    padding: 4px 0;
+}
+
+.app-sidebar .menu-submenu .menu-item > .menu-link {
+    color: rgba(255, 255, 255, 0.6) !important;
+    margin: 0 6px;
+    padding: 7px 12px 7px 34px;
+    font-size: 13px;
+}
+
+.app-sidebar .menu-submenu .menu-item > .menu-link:hover,
+.app-sidebar .menu-submenu .menu-item.active > .menu-link {
+    color: #FFFFFF !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.app-sidebar-mobile-backdrop {
+    background: rgba(11, 20, 55, 0.6);
+}
+
+/* --------------------------------------------------------------------------
+   Cards
+   -------------------------------------------------------------------------- */
+.card {
+    background: var(--gg-surface);
+    border: 1px solid var(--gg-border);
+    border-radius: var(--gg-radius);
+    box-shadow: var(--gg-shadow);
+}
+
+.card-header {
+    background: transparent;
+    border-bottom: 1px solid var(--gg-border);
+    font-weight: 600;
+    color: var(--gg-heading);
+}
+
+.gg-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gg-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--gg-shadow-lg);
+}
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+.btn {
+    border-radius: var(--gg-radius-sm);
+    font-weight: 600;
+    transition: background-color 0.18s ease, box-shadow 0.18s ease, transform 0.12s ease;
+    cursor: pointer;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-primary,
+.btn-blue {
+    background-color: var(--gg-primary) !important;
+    border-color: var(--gg-primary) !important;
+    color: #fff !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-blue:hover,
+.btn-blue:focus {
+    background-color: var(--gg-primary-600) !important;
+    border-color: var(--gg-primary-600) !important;
+    box-shadow: 0 6px 16px -6px rgba(30, 64, 175, 0.5);
+}
+
+.btn-yellow,
+.btn-warning {
+    background-color: var(--gg-accent) !important;
+    border-color: var(--gg-accent) !important;
+    color: #fff !important;
+}
+
+.btn-yellow:hover,
+.btn-warning:hover {
+    background-color: #B45309 !important;
+    border-color: #B45309 !important;
+    color: #fff !important;
+}
+
+.btn-success {
+    background-color: var(--gg-success) !important;
+    border-color: var(--gg-success) !important;
+}
+
+.btn-danger {
+    background-color: var(--gg-danger) !important;
+    border-color: var(--gg-danger) !important;
+}
+
+.btn-outline-primary {
+    color: var(--gg-primary) !important;
+    border-color: var(--gg-primary) !important;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--gg-primary) !important;
+    color: #fff !important;
+}
+
+/* --------------------------------------------------------------------------
+   Tables (incl. DataTables)
+   -------------------------------------------------------------------------- */
+.table {
+    color: var(--gg-fg);
+}
+
+.table thead th {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gg-muted);
+    border-top: 0;
+    border-bottom: 1px solid var(--gg-border) !important;
+    background: #F9FAFC;
+    white-space: nowrap;
+}
+
+.table td {
+    vertical-align: middle;
+    border-color: #EEF2F7;
+}
+
+.table-hover tbody tr:hover,
+table.dataTable tbody tr:hover {
+    background-color: #F4F7FE;
+}
+
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select {
+    border: 1px solid var(--gg-border);
+    border-radius: var(--gg-radius-sm);
+    padding: 5px 10px;
+    background: var(--gg-surface);
+}
+
+.dt-buttons .btn,
+.dataTables_wrapper .btn-default {
+    background: var(--gg-surface) !important;
+    border: 1px solid var(--gg-border) !important;
+    color: var(--gg-fg) !important;
+    border-radius: var(--gg-radius-sm) !important;
+    font-weight: 600;
+}
+
+.dt-buttons .btn:hover {
+    border-color: var(--gg-primary) !important;
+    color: var(--gg-primary) !important;
+}
+
+.page-item.active .page-link {
+    background-color: var(--gg-primary) !important;
+    border-color: var(--gg-primary) !important;
+    color: #fff !important;
+}
+
+.page-link {
+    color: var(--gg-primary);
+    border-radius: 6px;
+    margin: 0 2px;
+    border-color: var(--gg-border);
+}
+
+/* --------------------------------------------------------------------------
+   Forms
+   -------------------------------------------------------------------------- */
+.form-control,
+select.form-control,
+textarea.form-control {
+    border: 1px solid #CBD5E1;
+    border-radius: var(--gg-radius-sm);
+    color: var(--gg-fg);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.form-control:focus {
+    border-color: var(--gg-secondary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+}
+
+label,
+.col-form-label {
+    font-weight: 600;
+    color: var(--gg-heading);
+}
+
+/* --------------------------------------------------------------------------
+   Badges / status chips
+   -------------------------------------------------------------------------- */
+.badge,
+.label {
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+.gg-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+.gg-chip-success { background: var(--gg-success-soft); color: var(--gg-success); }
+.gg-chip-warning { background: var(--gg-warning-soft); color: var(--gg-warning); }
+.gg-chip-danger  { background: var(--gg-danger-soft);  color: var(--gg-danger); }
+.gg-chip-info    { background: var(--gg-info-soft);    color: var(--gg-primary-600); }
+.gg-chip-muted   { background: #F1F5F9;                color: var(--gg-muted); }
+
+/* --------------------------------------------------------------------------
+   Dashboard widgets
+   -------------------------------------------------------------------------- */
+.gg-kpi {
+    position: relative;
+    overflow: hidden;
+}
+
+.gg-kpi .gg-kpi-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gg-muted);
+    margin-bottom: 6px;
+}
+
+.gg-kpi .gg-kpi-value {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--gg-heading);
+    line-height: 1.15;
+}
+
+.gg-kpi .gg-kpi-sub {
+    font-size: 12.5px;
+    color: var(--gg-muted);
+    margin-top: 6px;
+}
+
+.gg-kpi-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+    flex-shrink: 0;
+}
+
+.gg-kpi-icon.bg-primary-soft { background: var(--gg-primary-soft); color: var(--gg-primary); }
+.gg-kpi-icon.bg-accent-soft  { background: var(--gg-accent-soft);  color: var(--gg-accent); }
+.gg-kpi-icon.bg-success-soft { background: var(--gg-success-soft); color: var(--gg-success); }
+.gg-kpi-icon.bg-danger-soft  { background: var(--gg-danger-soft);  color: var(--gg-danger); }
+
+.gg-delta {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+}
+
+.gg-delta-up   { background: var(--gg-success-soft); color: var(--gg-success); }
+.gg-delta-down { background: var(--gg-danger-soft);  color: var(--gg-danger); }
+
+.gg-card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--gg-heading);
+    margin-bottom: 2px;
+}
+
+.gg-card-sub {
+    font-size: 12.5px;
+    color: var(--gg-muted);
+}
+
+/* Mini stat tiles (counts row) */
+.gg-mini {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--gg-surface);
+    border: 1px solid var(--gg-border);
+    border-radius: var(--gg-radius);
+    box-shadow: var(--gg-shadow);
+    color: inherit !important;
+    text-decoration: none !important;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.gg-mini:hover {
+    transform: translateY(-2px);
+    border-color: var(--gg-secondary);
+    box-shadow: var(--gg-shadow-lg);
+}
+
+.gg-mini .gg-mini-value {
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--gg-heading);
+    line-height: 1.1;
+}
+
+.gg-mini .gg-mini-label {
+    font-size: 12px;
+    color: var(--gg-muted);
+    font-weight: 500;
+}
+
+/* Bestseller list rows */
+.gg-list-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px dashed #EEF2F7;
+}
+
+.gg-list-row:last-child {
+    border-bottom: 0;
+}
+
+.gg-list-thumb {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: #F1F5F9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.gg-list-thumb img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+/* Hero band on dashboard */
+.gg-hero {
+    background: radial-gradient(1200px 400px at 110% -20%, rgba(59, 130, 246, 0.35), transparent 60%),
+                linear-gradient(120deg, var(--gg-sidebar-bg) 0%, #16307F 65%, var(--gg-primary-600) 100%);
+    border: 0;
+    border-radius: var(--gg-radius);
+    color: #fff;
+}
+
+.gg-hero .gg-hero-label {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.gg-hero .gg-hero-value {
+    font-size: 34px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.gg-hero .gg-hero-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+/* Footer */
+.app-footer {
+    border-top: 1px solid var(--gg-border);
+    background: var(--gg-surface);
+    color: var(--gg-muted);
+}
+
+/* Modals */
+.modal-content {
+    border: 0;
+    border-radius: var(--gg-radius);
+    box-shadow: var(--gg-shadow-lg);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--gg-border);
+}
+
+.modal-footer {
+    border-top: 1px solid var(--gg-border);
+}
+
+/* Alerts */
+.alert {
+    border-radius: var(--gg-radius-sm);
+    border: 1px solid transparent;
+    font-weight: 500;
+}
+
+/* Legacy fixes carried over from the old inline styles */
+.card-header.card-header-primary { padding: 10px !important; }
+.alert { padding: 8px 12px !important; }
+.dataTables_info { display: none; }
+.app-footer-fixed .app-footer { z-index: 999 !important; }
+.material-icons { margin-top: 0 !important; margin-bottom: 0 !important; }
+
+/* Scroll-top button */
+.btn-scroll-top {
+    background: var(--gg-primary);
+    border-radius: 12px;
+    box-shadow: var(--gg-shadow-lg);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

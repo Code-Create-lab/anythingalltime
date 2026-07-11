@@ -936,4 +936,25 @@ return [
     'coupon_mincart_holder' => 'Enter minimum amount in cart to apply discount',
     'coupon_limuses_holder' => 'Limit quantity of uses per user',
 
+    // Pro dashboard
+    'Cancelled' => 'Cancelled',
+    'Average Order Value' => 'Average Order Value',
+    'Total Orders' => 'Total Orders',
+    'Customers' => 'Customers',
+    'Active Stores' => 'Active Stores',
+    'Pending Approvals' => 'Pending Approvals',
+    'Revenue & Orders Trend' => 'Revenue & Orders Trend',
+    'Order Status Split' => 'Order Status Split',
+    'Payment Methods' => 'Payment Methods',
+    'Top Stores' => 'Top Stores',
+    'New Users' => 'New Users',
+    'Today Earnings' => 'Today Earnings',
+    'All time' => 'All time',
+    'Completed orders only' => 'Completed orders only',
+    'Registered customers' => 'Registered customers',
+    'orders' => 'orders',
+    'View all' => 'View all',
+    'Platform revenue after store payouts' => 'Platform revenue after store payouts',
+    'vs last week' => 'vs last week',
+
 ];
