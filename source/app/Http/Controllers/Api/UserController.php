@@ -227,7 +227,7 @@ class UserController extends Controller
 
         $checkUser = DB::table('users')
             ->where($login_field, $login_value)
-            ->where('is_verified', 1)
+            ->where('is_verified', '!=', 0)
             ->first();
 
         if ($checkUser) {

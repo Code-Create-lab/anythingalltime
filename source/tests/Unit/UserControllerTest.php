@@ -163,6 +163,27 @@ class UserControllerTest extends TestCase
     }
 
     /**
+     * Test login with an already registered email and nonzero verification status
+     */
+    public function test_login_with_registered_email_nonzero_verified_status(): void
+    {
+        DB::table('firebase')->update(['status' => 1]);
+        $this->user->update(['is_verified' => 2]);
+
+        $request = new Request([
+            'email' => $this->user->email,
+            'device_id' => 'login-device-789',
+        ]);
+
+        $response = $this->controller->login($request);
+
+        $this->assertEquals('1', $response['status']);
+        $this->assertEquals('Verify OTP for Login', $response['message']);
+        $this->assertEquals($this->user->id, $response['data']->id);
+        $this->assertSame(1, User::where('email', $this->user->email)->count());
+    }
+
+    /**
      * Test profile edit with existing phone number
      */
     public function test_profile_edit_existing_phone(): void
