@@ -444,13 +444,27 @@ class UserController extends Controller
 
     public function register_details(Request $request)
     {
-        $user_phone = $request->user_phone;
-        $user_email = $request->user_email;
+        $user_phone = $request->user_phone != null ? trim($request->user_phone) : null;
+        $user_email = $request->user_email ?: $request->email;
+        $user_email = $user_email != null ? trim($user_email) : null;
+        $fb_id = $request->facebook_id ?: $request->fb_id;
+
+        if ($user_phone != null && filter_var($user_phone, FILTER_VALIDATE_EMAIL)) {
+            if ($user_email == null) {
+                $user_email = $user_phone;
+            }
+            $user_phone = null;
+        }
+
+        if ($user_phone == null && $user_email == null && $fb_id == null) {
+            $message = ['status' => '0', 'message' => 'Please enter mobile number or email'];
+
+            return $message;
+        }
+
         $password = Hash::make($request->password);
-        $fb_id = $request->fb_id;
         $user_city = $request->user_city;
         $user_area = $request->user_area;
-        $fb_id = $request->facebook_id;
         $name = $request->name;
         $u_name1 = str_replace(' ', '', $name);
         $u_name2 = str_replace('.', '', $u_name1);
@@ -490,40 +504,62 @@ class UserController extends Controller
             $filePath = 'N/A';
         }
 
-        if ($fb_id == null) {
-            $check = DB::table('users')
-                ->where('user_phone', $user_phone)
-                ->orWhere('email', $user_email)
-                ->first();
-        } else {
-            $check = DB::table('users')
-                ->where('user_phone', $user_phone)
-                ->orWhere('email', $user_email)
-                ->orWhere('facebook_id', $fb_id)
-                ->first();
+        $registeredUser = DB::table('users')
+            ->where(function ($query) use ($user_phone, $user_email, $fb_id) {
+                if ($user_phone != null) {
+                    $query->orWhere('user_phone', $user_phone);
+                }
+                if ($user_email != null) {
+                    $query->orWhere('email', $user_email);
+                }
+                if ($fb_id != null) {
+                    $query->orWhere('facebook_id', $fb_id);
+                }
+            })
+            ->where('is_verified', '!=', 0)
+            ->first();
+
+        if ($registeredUser) {
+            $message = ['status' => '0', 'message' => 'User Already Registered with this email or phone number'];
+
+            return $message;
         }
 
-        if ($check) {
-            if ($check->is_verified != 0) {
-                $message = ['status' => '0', 'message' => 'User Already Registered with this email or phone number'];
+        $check = DB::table('users')
+            ->where(function ($query) use ($user_phone, $user_email, $fb_id) {
+                if ($user_phone != null) {
+                    $query->orWhere('user_phone', $user_phone);
+                }
+                if ($user_email != null) {
+                    $query->orWhere('email', $user_email);
+                }
+                if ($fb_id != null) {
+                    $query->orWhere('facebook_id', $fb_id);
+                }
+            })
+            ->where('is_verified', 0)
+            ->first();
 
-                return $message;
-            }
+        if ($check) {
+            $user_phone = $user_phone ?: $check->user_phone;
+            $user_email = $user_email ?: $check->email;
+            $fb_id = $fb_id ?: $check->facebook_id;
+
             $updateUser = DB::table('users')
                 ->where('id', $check->id)
-                ->update(['name' => $name, 'email' => $user_email, 'user_phone' => $user_phone, 'user_city' => $user_city, 'user_area' => $user_area, 'user_image' => $filePath, 'referral_code' => $referral_c, 'password' => $password]);
+                ->update(['name' => $name, 'email' => $user_email, 'user_phone' => $user_phone, 'user_city' => $user_city, 'user_area' => $user_area, 'user_image' => $filePath, 'referral_code' => $referral_c, 'facebook_id' => $fb_id, 'password' => $password]);
 
             $chars = '0123456789';
             $otpval = '';
             for ($i = 0; $i < 6; $i++) {
                 $otpval .= $chars[mt_rand(0, strlen($chars) - 1)];
             }
-            $user = User::where('user_phone', $user_phone)->first();
+            $user = User::where('id', $check->id)->first();
             $firebase_st = DB::table('firebase')
                 ->first();
-            if ($firebase_st->status == 0) {
+            if ($firebase_st->status == 0 && $user_phone != null) {
                 $updateotp = DB::table('users')
-                    ->where('user_phone', $user_phone)
+                    ->where('id', $check->id)
                     ->update(['otp_value' => $otpval]);
                 $otpmsg = $this->otpmsg($otpval, $user_phone);
             }
@@ -535,7 +571,7 @@ class UserController extends Controller
                     ->where('referral_code', $referral_code1)
                     ->first();
                 $getuser = DB::table('users')
-                    ->where('user_phone', $user_phone)
+                    ->where('id', $check->id)
                     ->first();
                 if ($getReferredUser1) {
                     $insertReferral = DB::table('tbl_referral')
@@ -553,7 +589,7 @@ class UserController extends Controller
                     $earn = "You've won ₹ ".$earning;
                     // ////referral to user /////////
                     $userupdate2 = DB::table('users')
-                        ->where('user_phone', $user_phone)
+                        ->where('id', $check->id)
                         ->update(['wallet' => $earning]);
 
                 } else {
@@ -562,7 +598,7 @@ class UserController extends Controller
                     return $message;
                 }
             }
-            $message = ['status' => '1', 'message' => 'verify otp', 'data' => $user];
+            $message = ['status' => '1', 'message' => $user_phone != null ? 'verify otp' : 'registration details saved', 'data' => $user];
 
             return $message;
         } else {
