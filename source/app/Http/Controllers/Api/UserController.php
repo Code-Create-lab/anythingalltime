@@ -209,22 +209,41 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-        $user_phone = $request->user_phone;
+        $user_phone = $request->user_phone != null ? trim($request->user_phone) : null;
+        $user_email = $request->user_email ?: $request->email;
+        $user_email = $user_email != null ? trim($user_email) : null;
+        $login_value = $user_phone ?: $user_email;
         $device_id = $request->device_id;
         $reg_date = date('Y-m-d');
 
+        if ($login_value == null) {
+            $message = ['status' => '0', 'message' => 'Please enter mobile number or email'];
+
+            return $message;
+        }
+
+        $login_field = filter_var($login_value, FILTER_VALIDATE_EMAIL) ? 'email' : 'user_phone';
+
         $checkUser = DB::table('users')
-            ->where('user_phone', $user_phone)
+            ->where($login_field, $login_value)
             ->where('is_verified', 1)
             ->first();
 
         if ($checkUser) {
             $Userdetails = DB::table('users')
-                ->where('user_phone', $user_phone)
+                ->where('id', $checkUser->id)
                 ->first();
 
+            $user_phone = $Userdetails->user_phone;
+
+            if ($user_phone == null) {
+                $message = ['status' => '0', 'message' => 'Mobile number not registered for this user'];
+
+                return $message;
+            }
+
             $updateDeviceId = DB::table('users')
-                ->where('user_phone', $user_phone)
+                ->where('id', $checkUser->id)
                 ->update(['device_id' => $device_id]);
             $chars = '0123456789';
             $otpval = '';
@@ -236,7 +255,7 @@ class UserController extends Controller
                 ->first();
             if ($firebase_st->status == 0) {
                 $updateotp = DB::table('users')
-                    ->where('user_phone', $user_phone)
+                    ->where('id', $checkUser->id)
                     ->update(['otp_value' => $otpval]);
                 $otpmsg = $this->otpmsg($otpval, $user_phone);
             }
@@ -245,22 +264,25 @@ class UserController extends Controller
             return $message;
         } else {
             $unvuser = DB::table('users')
-                ->where('user_phone', $user_phone)
+                ->where($login_field, $login_value)
                 ->where('is_verified', 0)
                 ->first();
 
             if ($unvuser) {
                 $delete = DB::table('users')
-                    ->where('user_phone', $user_phone)
+                    ->where($login_field, $login_value)
                     ->where('is_verified', 0)
                     ->delete();
             }
 
+            $newUser = ['name' => 'User', 'is_verified' => 0, 'reg_date' => $reg_date];
+            $newUser[$login_field] = $login_value;
+
             $Userreg = DB::table('users')
-                ->insertGetId(['user_phone' => $user_phone, 'name' => 'User', 'is_verified' => 0, 'reg_date' => $reg_date]);
+                ->insertGetId($newUser);
 
             $Userdetails = DB::table('users')
-                ->where('user_phone', $user_phone)
+                ->where('id', $Userreg)
                 ->first();
 
             $appsetting = DB::table('notificationby')
@@ -269,7 +291,7 @@ class UserController extends Controller
                     'app' => '1',
                     'email' => '1']);
 
-            $message = ['status' => '2', 'message' => 'go to register details page', 'data' => $user_phone];
+            $message = ['status' => '2', 'message' => 'go to register details page', 'data' => $login_value];
 
             return $message;
 
