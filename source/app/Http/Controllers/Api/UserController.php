@@ -62,7 +62,7 @@ class UserController extends Controller
             } else {
                 $delete = DB::table('users')
                     ->where('email', $user_email)
-                    ->where('is_verified', 0)
+                    // ->where('is_verified', 0)
                     ->delete();
 
                 $Userreg = DB::table('users')
@@ -117,7 +117,7 @@ class UserController extends Controller
                 return $message;
             } else {
                 $delete = DB::table('users')
-                    ->where('is_verified', '!=', 0)
+                    // ->where('is_verified', '!=', 0)
                     ->where('facebook_id', $fb_id)
                     ->orWhere('email', $email)
                     ->delete();
@@ -186,7 +186,7 @@ class UserController extends Controller
                 return $message;
             } else {
                 $delete = DB::table('users')
-                    ->where('is_verified', 0)
+                    // ->where('is_verified', 0)
                     ->where('facebook_id', $fb_id)
                     ->orWhere('email', $email)
                     ->delete();
@@ -227,7 +227,7 @@ class UserController extends Controller
 
         $checkUser = DB::table('users')
             ->where($login_field, $login_value)
-            ->where('is_verified', '!=', 0)
+            // ->where('is_verified', '!=', 0)
             ->first();
 
         if ($checkUser) {
@@ -266,13 +266,13 @@ class UserController extends Controller
         } else {
             $unvuser = DB::table('users')
                 ->where($login_field, $login_value)
-                ->where('is_verified', 0)
+                // ->where('is_verified', 0)
                 ->first();
 
             if ($unvuser) {
                 $delete = DB::table('users')
                     ->where($login_field, $login_value)
-                    ->where('is_verified', 0)
+                    // ->where('is_verified', 0)
                     ->delete();
             }
 
@@ -517,7 +517,7 @@ class UserController extends Controller
                     $query->orWhere('facebook_id', $fb_id);
                 }
             })
-            ->where('is_verified', '!=', 0)
+            // ->where('is_verified', '!=', 0)
             ->first();
 
         if ($registeredUser) {
@@ -538,7 +538,7 @@ class UserController extends Controller
                     $query->orWhere('facebook_id', $fb_id);
                 }
             })
-            ->where('is_verified', 0)
+            // ->where('is_verified', 0)
             ->first();
 
         if ($check) {
@@ -700,7 +700,7 @@ class UserController extends Controller
 
         $checkUser = DB::table('users')
             ->where($login_field, $login_value)
-            // ->where('is_verified', 1)
+            ->where('is_verified', 1)
             ->first();
 
         if ($checkUser) {
