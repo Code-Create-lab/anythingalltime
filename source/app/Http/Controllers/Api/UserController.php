@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use DB;
 use Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -676,10 +677,29 @@ class UserController extends Controller
 
     public function forgotPassword(Request $request)
     {
-        $user_phone = $request->user_phone;
+        $user_phone = $request->user_phone != null ? trim($request->user_phone) : null;
+        $user_email = $request->user_email ?: $request->email;
+        $user_email = $user_email != null ? trim($user_email) : null;
+
+        if ($user_phone != null && filter_var($user_phone, FILTER_VALIDATE_EMAIL)) {
+            if ($user_email == null) {
+                $user_email = $user_phone;
+            }
+            $user_phone = null;
+        }
+
+        $login_value = $user_email ?: $user_phone;
+
+        if ($login_value == null) {
+            $message = ['status' => '0', 'message' => 'Please enter mobile number or email'];
+
+            return $message;
+        }
+
+        $login_field = $user_email != null ? 'email' : 'user_phone';
 
         $checkUser = DB::table('users')
-            ->where('user_phone', $user_phone)
+            ->where($login_field, $login_value)
             ->where('is_verified', 1)
             ->first();
 
@@ -691,17 +711,24 @@ class UserController extends Controller
             }
             $firebase_st = DB::table('firebase')
                 ->first();
-            if ($firebase_st->status == 0) {
-                $otpmsg = $this->otpmsg($otpval, $user_phone);
+            if ($login_field == 'email') {
+                $app = DB::table('tbl_web_setting')
+                    ->first();
+                $app_name = $app ? $app->name : config('app.name');
+                Mail::raw('Your OTP is '.$otpval.' to reset your password.', function ($m) use ($checkUser, $app_name) {
+                    $m->to($checkUser->email, $checkUser->name)->subject($app_name.' Password Reset OTP');
+                });
+            } elseif ($firebase_st->status == 0) {
+                $otpmsg = $this->otpmsg($otpval, $checkUser->user_phone);
             }
 
             $updateOtp = DB::table('users')
-                ->where('user_phone', $user_phone)
+                ->where('id', $checkUser->id)
                 ->update(['otp_value' => $otpval]);
 
             if ($updateOtp) {
                 $checkUser1 = DB::table('users')
-                    ->where('user_phone', $user_phone)
+                    ->where('id', $checkUser->id)
                     ->first();
 
                 $message = ['status' => '1', 'message' => 'Verify OTP', 'data' => $checkUser1];
@@ -722,13 +749,32 @@ class UserController extends Controller
 
     public function verifyOtpPass(Request $request)
     {
-        $phone = $request->user_phone;
+        $phone = $request->user_phone != null ? trim($request->user_phone) : null;
+        $email = $request->user_email ?: $request->email;
+        $email = $email != null ? trim($email) : null;
         $otp = $request->otp;
+
+        if ($phone != null && filter_var($phone, FILTER_VALIDATE_EMAIL)) {
+            if ($email == null) {
+                $email = $phone;
+            }
+            $phone = null;
+        }
+
+        $login_value = $email ?: $phone;
+
+        if ($login_value == null) {
+            $message = ['status' => '0', 'message' => 'Please enter mobile number or email'];
+
+            return $message;
+        }
+
+        $login_field = $email != null ? 'email' : 'user_phone';
         $checuss = DB::table('users')
             ->first();
         // check for otp verify
         $getUser = DB::table('users')
-            ->where('user_phone', $phone)
+            ->where($login_field, $login_value)
             ->first();
 
         if ($getUser) {
@@ -872,21 +918,40 @@ class UserController extends Controller
 
     public function changePassword(Request $request)
     {
-        $user_phone = $request->user_phone;
+        $user_phone = $request->user_phone != null ? trim($request->user_phone) : null;
+        $user_email = $request->user_email ?: $request->email;
+        $user_email = $user_email != null ? trim($user_email) : null;
         $password = Hash::make($request->user_password);
 
+        if ($user_phone != null && filter_var($user_phone, FILTER_VALIDATE_EMAIL)) {
+            if ($user_email == null) {
+                $user_email = $user_phone;
+            }
+            $user_phone = null;
+        }
+
+        $login_value = $user_email ?: $user_phone;
+
+        if ($login_value == null) {
+            $message = ['status' => '0', 'message' => 'Please enter mobile number or email'];
+
+            return $message;
+        }
+
+        $login_field = $user_email != null ? 'email' : 'user_phone';
+
         $getUser = DB::table('users')
-            ->where('user_phone', $user_phone)
+            ->where($login_field, $login_value)
             ->first();
 
         if ($getUser) {
             $updateOtp = DB::table('users')
-                ->where('user_phone', $user_phone)
+                ->where('id', $getUser->id)
                 ->update(['password' => $password]);
 
             if ($updateOtp) {
                 $checkUser1 = DB::table('users')
-                    ->where('user_phone', $user_phone)
+                    ->where('id', $getUser->id)
                     ->first();
 
                 $message = ['status' => '1', 'message' => 'Password changed', 'data' => $checkUser1];
