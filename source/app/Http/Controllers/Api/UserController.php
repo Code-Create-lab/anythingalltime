@@ -231,21 +231,6 @@ class UserController extends Controller
             ->first();
 
         if ($checkUser) {
-            $Userdetails = DB::table('users')
-                ->where('id', $checkUser->id)
-                ->first();
-
-            $user_phone = $Userdetails->user_phone;
-
-            if ($user_phone == null) {
-                $message = ['status' => '0', 'message' => 'Mobile number not registered for this user'];
-
-                return $message;
-            }
-
-            $updateDeviceId = DB::table('users')
-                ->where('id', $checkUser->id)
-                ->update(['device_id' => $device_id]);
             $chars = '0123456789';
             $otpval = '';
             for ($i = 0; $i < 6; $i++) {
@@ -254,37 +239,47 @@ class UserController extends Controller
 
             $firebase_st = DB::table('firebase')
                 ->first();
-            if ($firebase_st->status == 0) {
-                $updateotp = DB::table('users')
-                    ->where('id', $checkUser->id)
-                    ->update(['otp_value' => $otpval]);
-                $otpmsg = $this->otpmsg($otpval, $user_phone);
+
+            $send_sms = $checkUser->user_phone != null && $firebase_st->status == 0;
+            $send_mail = $checkUser->email != null;
+
+            if (! $send_sms && ! $send_mail && $checkUser->user_phone == null) {
+                $message = ['status' => '0', 'message' => 'Mobile number or email not registered for this user'];
+
+                return $message;
             }
-            $message = ['status' => '1', 'message' => 'Verify OTP for Login', 'data' => $Userdetails];
+
+            $update = ['device_id' => $device_id];
+            if ($send_sms || $send_mail) {
+                $update['otp_value'] = $otpval;
+            }
+
+            $updateUser = DB::table('users')
+                ->where('id', $checkUser->id)
+                ->update($update);
+
+            if ($send_sms) {
+                $otpmsg = $this->otpmsg($otpval, $checkUser->user_phone);
+            }
+
+            if ($send_mail) {
+                $app = DB::table('tbl_web_setting')
+                    ->first();
+                $app_name = $app ? $app->name : config('app.name');
+                Mail::raw('Your OTP is '.$otpval.' to login to your account.', function ($m) use ($checkUser, $app_name) {
+                    $m->to($checkUser->email, $checkUser->name)->subject($app_name.' Login OTP');
+                });
+            }
+
+            $message = ['status' => '1', 'message' => 'Verify OTP for Login', 'data' => $checkUser];
 
             return $message;
         } else {
-            $unvuser = DB::table('users')
-                ->where($login_field, $login_value)
-                // ->where('is_verified', 0)
-                ->first();
-
-            if ($unvuser) {
-                $delete = DB::table('users')
-                    ->where($login_field, $login_value)
-                    // ->where('is_verified', 0)
-                    ->delete();
-            }
-
             $newUser = ['name' => 'User', 'is_verified' => 0, 'reg_date' => $reg_date];
             $newUser[$login_field] = $login_value;
 
             $Userreg = DB::table('users')
                 ->insertGetId($newUser);
-
-            $Userdetails = DB::table('users')
-                ->where('id', $Userreg)
-                ->first();
 
             $appsetting = DB::table('notificationby')
                 ->insert(['user_id' => $Userreg,
@@ -517,7 +512,7 @@ class UserController extends Controller
                     $query->orWhere('facebook_id', $fb_id);
                 }
             })
-            // ->where('is_verified', '!=', 0)
+            ->where('is_verified', '!=', 0)
             ->first();
 
         if ($registeredUser) {
@@ -558,13 +553,28 @@ class UserController extends Controller
             $user = User::where('id', $check->id)->first();
             $firebase_st = DB::table('firebase')
                 ->first();
-            if ($firebase_st->status == 0 && $user_phone != null) {
+
+            $send_sms = $firebase_st->status == 0 && $user_phone != null;
+            $send_mail = $user_email != null;
+
+            if ($send_sms || $send_mail) {
                 $updateotp = DB::table('users')
                     ->where('id', $check->id)
                     ->update(['otp_value' => $otpval]);
+            }
+
+            if ($send_sms) {
                 $otpmsg = $this->otpmsg($otpval, $user_phone);
             }
-            // dd($otpval);
+
+            if ($send_mail) {
+                $app = DB::table('tbl_web_setting')
+                    ->first();
+                $app_name = $app ? $app->name : config('app.name');
+                Mail::raw('Your OTP is '.$otpval.' to verify your account.', function ($m) use ($user_email, $name, $app_name) {
+                    $m->to($user_email, $name)->subject($app_name.' Verification OTP');
+                });
+            }
             $created_at = Carbon::now();
 
             if ($referral_code1 != null) {
@@ -599,7 +609,7 @@ class UserController extends Controller
                     return $message;
                 }
             }
-            $message = ['status' => '1', 'message' => $user_phone != null ? 'verify otp' : 'registration details saved', 'data' => $user];
+            $message = ['status' => '1', 'message' => ($user_phone != null || $user_email != null) ? 'verify otp' : 'registration details saved', 'data' => $user];
 
             return $message;
         } else {
@@ -1192,17 +1202,33 @@ class UserController extends Controller
 
     public function verifyPhone(Request $request)
     {
-        $phone = $request->user_phone;
+        $phone = $request->user_phone != null ? trim($request->user_phone) : null;
+        $email = $request->user_email ?: $request->email;
+        $email = $email != null ? trim($email) : null;
         $otp = $request->otp;
         $device_id = $request->device_id;
-        $checuss = User::first();
         $referral_code = $request->referral_code;
-        $smsby = DB::table('smsby')
-            ->first();
         $created_at = Carbon::now();
+
+        if ($phone != null && filter_var($phone, FILTER_VALIDATE_EMAIL)) {
+            if ($email == null) {
+                $email = $phone;
+            }
+            $phone = null;
+        }
+
+        $login_field = $phone != null ? 'user_phone' : 'email';
+        $login_value = $phone ?: $email;
+
+        if ($login_value == null) {
+            $message = ['status' => '0', 'message' => 'Please enter mobile number or email'];
+
+            return $message;
+        }
+
         // check for otp verify
         $getUser = DB::table('users')
-            ->where('user_phone', $phone)
+            ->where($login_field, $login_value)
             ->first();
 
         if (! $getUser) {
@@ -1225,13 +1251,10 @@ class UserController extends Controller
                         $getReferredUser1 = DB::table('users')
                             ->where('referral_code', $referral_code)
                             ->first();
-                        $getuser = DB::table('users')
-                            ->where('user_phone', $user_phone)
-                            ->first();
                         if ($getReferredUser1) {
                             $insertReferral = DB::table('tbl_referral')
                                 ->insert([
-                                    'user_id' => $getuser->id,
+                                    'user_id' => $getUser->id,
                                     'referral_by' => $getReferredUser1->id,
                                     'created_at' => $created_at,
                                 ]);
@@ -1248,7 +1271,7 @@ class UserController extends Controller
                                 ->update(['wallet' => $getReferredUser1->wallet + $earning]);
                             // ////referral to user /////////
                             $userupdate2 = DB::table('users')
-                                ->where('user_phone', $phone)
+                                ->where('id', $getUser->id)
                                 ->update(['wallet' => $earning]);
 
                         } else {
@@ -1271,23 +1294,24 @@ class UserController extends Controller
 
                             $userupdate = DB::table('users')
                                 ->where('id', $getReferral->referral_by)
-                                ->update(['wallet' => $getReferredUser1->wallet + $earning]);
+                                ->update(['wallet' => $getUser->wallet + $earning]);
                         }
                     }
                 }
-                // verify phone
-                $getUser2 = User::where('user_phone', $phone)
+                // verify user
+                $getUser2 = User::where('id', $getUser->id)
                     ->update(['is_verified' => 1,
-                        'otp_value' => null]);
-                $updateDeviceId = DB::table('users')
-                    ->where('user_phone', $phone)
-                    ->update(['device_id' => $device_id]);
+                        'otp_value' => null,
+                        'device_id' => $device_id]);
                 if ($ver == 0) {
-                    $welcomemessage = $this->welmsg($user_name, $user_phone, $user_email);
-
-                    $welcomemail = $this->welmail($user_name, $user_phone, $user_email);
+                    if ($user_phone != null) {
+                        $welcomemessage = $this->welmsg($user_name, $user_phone, $user_email);
+                    }
+                    if ($user_email != null) {
+                        $welcomemail = $this->welmail($user_name, $user_phone, $user_email);
+                    }
                 }
-                $user = User::where('user_phone', $phone)
+                $user = User::where('id', $getUser->id)
                     ->first();
                 $token = $user->createToken('token')->accessToken;
                 $user_id = $user->id;
