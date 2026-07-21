@@ -227,10 +227,9 @@ class UserController extends Controller
 
         $checkUser = DB::table('users')
             ->where($login_field, $login_value)
-            // ->where('is_verified', '!=', 0)
             ->first();
 
-        if ($checkUser) {
+        if ($checkUser && $checkUser->is_verified != 0) {
             $chars = '0123456789';
             $otpval = '';
             for ($i = 0; $i < 6; $i++) {
@@ -275,17 +274,24 @@ class UserController extends Controller
 
             return $message;
         } else {
-            $newUser = ['name' => 'User', 'is_verified' => 0, 'reg_date' => $reg_date];
-            $newUser[$login_field] = $login_value;
+            if ($checkUser) {
+                // Unverified stub from a previous abandoned login: reuse it, don't duplicate.
+                DB::table('users')
+                    ->where('id', $checkUser->id)
+                    ->update(['device_id' => $device_id]);
+            } else {
+                $newUser = ['name' => 'User', 'is_verified' => 0, 'reg_date' => $reg_date, 'device_id' => $device_id];
+                $newUser[$login_field] = $login_value;
 
-            $Userreg = DB::table('users')
-                ->insertGetId($newUser);
+                $Userreg = DB::table('users')
+                    ->insertGetId($newUser);
 
-            $appsetting = DB::table('notificationby')
-                ->insert(['user_id' => $Userreg,
-                    'sms' => '1',
-                    'app' => '1',
-                    'email' => '1']);
+                $appsetting = DB::table('notificationby')
+                    ->insert(['user_id' => $Userreg,
+                        'sms' => '1',
+                        'app' => '1',
+                        'email' => '1']);
+            }
 
             $message = ['status' => '2', 'message' => 'go to register details page', 'data' => $login_value];
 
