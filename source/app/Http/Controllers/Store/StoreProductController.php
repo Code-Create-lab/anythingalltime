@@ -36,8 +36,8 @@ class StoreProductController extends Controller
             ->first();
         $product = DB::table('product')
             ->join('categories', 'product.cat_id', '=', 'categories.cat_id')
-            ->join('categories as catttt', 'categories.parent', '=', 'catttt.cat_id')
-            ->select('product.*', 'categories.title as sub', 'catttt.title')
+            ->leftJoin('categories as catttt', 'categories.parent', '=', 'catttt.cat_id')
+            ->select('product.*', 'categories.title as sub', DB::raw('COALESCE(catttt.title, categories.title) as title'))
             ->where('product.added_by', $store->id)
             ->paginate(150);
         if ($this->storage_space != 'same_server') {

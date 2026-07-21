@@ -30,7 +30,7 @@ class StproductController extends Controller
         $seachstring = $request->searchstring;
         $prodsssss = DB::table('product')
             ->join('categories', 'product.cat_id', '=', 'categories.cat_id')
-            ->join('categories as catttt', 'categories.parent', '=', 'catttt.cat_id')
+            ->leftJoin('categories as catttt', 'categories.parent', '=', 'catttt.cat_id')
             ->select('product.*')
             ->where('product.added_by', $store_id)
             ->where('product.product_name', 'like', $seachstring.'%')
