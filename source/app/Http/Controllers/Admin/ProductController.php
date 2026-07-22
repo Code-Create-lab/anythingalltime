@@ -86,6 +86,7 @@ class ProductController extends Controller
         $date = date('d-m-Y');
         $mrp = $request->mrp;
         $ean = $request->ean;
+        $hsn_no = $request->hsn_no;
         $images = $request->images;
 
         $this->getImageStorage();
@@ -102,6 +103,7 @@ class ProductController extends Controller
                 'mrp' => 'required',
                 'tags' => 'required',
                 'ean' => 'required',
+                'hsn_no' => 'required|max:20',
                 'type' => 'required',
             ],
             [
@@ -114,6 +116,7 @@ class ProductController extends Controller
                 'mrp.required' => 'Enter MRP.',
                 'tags.required' => 'Enter Tags',
                 'ean.required' => 'Enter Ean Code',
+                'hsn_no.required' => 'Enter HSN No',
                 'type.required' => 'Select Product Type',
             ]
         );
@@ -148,6 +151,7 @@ class ProductController extends Controller
                 'product_name' => $product_name,
                 'product_image' => $filePath,
                 'type' => $type,
+                'hsn_no' => $hsn_no,
 
             ]);
 
@@ -257,17 +261,20 @@ class ProductController extends Controller
         $tags = explode(',', $request->tags);
         $images = $request->images;
         $type = $request->type;
+        $hsn_no = $request->hsn_no;
         $this->validate(
             $request,
             [
                 'product_name' => 'required',
                 'cat_id' => 'required',
                 'type' => 'required',
+                'hsn_no' => 'required|max:20',
             ],
             [
                 'product_name.required' => 'Enter product name.',
                 'cat_id.required' => 'Select category',
                 'type.required' => 'Select Type',
+                'hsn_no.required' => 'Enter HSN No',
             ]
         );
 
@@ -315,6 +322,7 @@ class ProductController extends Controller
                 'product_name' => $product_name,
                 'product_image' => $filePath,
                 'type' => $type,
+                'hsn_no' => $hsn_no,
             ]);
 
         $delete_main_image = DB::table('product_images')

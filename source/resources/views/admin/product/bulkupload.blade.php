@@ -60,6 +60,7 @@
                       <li>{{ __('keywords.All fields are must needed in csv file')}}.</li>
                       <li>{{ __('keywords.fill the cat id(Which is available in Category list) od subcategory(which has a parent category) in category_id column of csv file')}}.</li>
                       <li>{{ __('keywords.Insert tags in tags column separated by comma')}}.</li>
+                      <li>{{ __('keywords.HSN No is mandatory in the hsn_no column (last column) of csv file')}}.</li>
                       <li>{{ __('keywords.Please upload the images on images/products path inside your main project directory')}}.</li>
                       <li><a style="color:blue" href="{{ asset('public/csv_sample/products.csv') }}" download="products.csv">{{ __('keywords.Download Sample File')}}</a></li>
                    </ol>

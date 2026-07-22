@@ -57,6 +57,7 @@
             <th>{{ __('keywords.Product')}} {{ __('keywords.Name')}}</th>
             <th>{{ __('keywords.Product Id')}}</th>
             <th>{{ __('keywords.Category')}}</th>
+            <th>{{ __('keywords.HSN No')}}</th>
             <th>{{ __('keywords.Product')}} {{ __('keywords.Image')}}</th>
             <th class="text-right">{{ __('keywords.Actions')}}</th>
         </tr>
@@ -70,20 +71,27 @@
             <td>{{$products->product_name}}</td>
             <td>{{$products->product_id}}</td>
             <td> {{$products->title}}</td>
+            <td> {{$products->hsn_no}}</td>
             <td><img src="{{$url_aws.$products->product_image}}"" alt="image"  style="width:50px;height:50px; border-radius:50%"/></td>
             <td class="td-actions text-right">
                
                 <a href="{{route('storevarient',$products->product_id)}}" rel="tooltip" class="btn btn-primary">
                     <i class="fa fa-cubes"></i>
                 </a>
-             
+                <a href="{{route('storeEditProduct',$products->product_id)}}" rel="tooltip" class="btn btn-success">
+                    <i class="fa fa-edit"></i>
+                </a>
+                <a href="{{route('storeDeleteProduct',$products->product_id)}}" onClick="return confirm('Are you sure you want to permanently remove this Product.')" rel="tooltip" class="btn btn-danger">
+                    <i class="fa fa-trash"></i>
+                </a>
+
             </td>
         </tr>
           @php $i++; @endphp
                  @endforeach
                   @else
                     <tr>
-                      <td colspan="6">{{ __('keywords.No data found')}}</td>
+                      <td colspan="7">{{ __('keywords.No data found')}}</td>
                     </tr>
                   @endif
     </tbody>

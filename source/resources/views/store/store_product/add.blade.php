@@ -84,16 +84,22 @@
                       </div>
                     </div>
                      <div class="row">
-                      <div class="col-md-6">
+                      <div class="col-md-4">
                         <div class="form-group">
                           <label class="bmd-label-floating">{{ __('keywords.Unit')}} (G/KG/Ltrs/Ml)</label>
                           <input type="text" name="unit" class="form-control" pattern="[A-Za-z]{1-10}" title="KG/G/Ltrs/Ml etc" value="{{old('unit')}}" required>
                         </div>
                       </div>
-                      <div class="col-md-6">
+                      <div class="col-md-4">
                         <div class="form-group">
                           <label class="bmd-label-floating">{{ __('keywords.EAN Code')}}</label>
                           <input type="text" name="ean"  value="{{old('ean')}}" class="form-control" required>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">{{ __('keywords.HSN No')}}</label>
+                          <input type="text" name="hsn_no" maxlength="20" value="{{old('hsn_no')}}" class="form-control" required>
                         </div>
                       </div>
                     </div>

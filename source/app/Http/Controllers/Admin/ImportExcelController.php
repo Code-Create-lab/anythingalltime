@@ -150,17 +150,37 @@ class ImportExcelController extends Controller
         );
         $count = 0;
         $fp = fopen($_FILES['select_file']['tmp_name'], 'r') or exit("can't open file");
+
+        // hsn_no is mandatory, so reject the whole file before inserting anything
+        $rows = [];
+        $missing_hsn_rows = [];
         while ($csv_line = fgetcsv($fp, 1024)) {
             $count++;
             if ($count == 1) {
                 continue;
             }// keep this if condition if you want to remove the first row
+            if (trim(implode('', $csv_line)) === '') {
+                continue;
+            }
+            if (! isset($csv_line[10]) || trim($csv_line[10]) === '') {
+                $missing_hsn_rows[] = $count;
+            }
+            $rows[] = $csv_line;
+        }
+        fclose($fp) or exit("can't close file");
+
+        if (count($missing_hsn_rows) > 0) {
+            return redirect()->back()->withErrors('HSN No is required for every product. Missing in csv row(s): '.implode(', ', $missing_hsn_rows));
+        }
+
+        foreach ($rows as $csv_line) {
             for ($i = 0, $j = count($csv_line); $i < $j; $i++) {
 
                 $insert_csv0 = [];
                 $insert_csv0['cat_id'] = $csv_line[0];
                 $insert_csv0['product_name'] = $csv_line[1];
                 $insert_csv0['product_image'] = $csv_line[2];
+                $insert_csv0['hsn_no'] = $csv_line[10];
 
                 $insert_csv1 = [];
                 $insert_csv1['quantity'] = $csv_line[3];
@@ -176,6 +196,7 @@ class ImportExcelController extends Controller
                 'cat_id' => $insert_csv0['cat_id'],
                 'product_name' => $insert_csv0['product_name'],
                 'product_image' => 'images/products/'.$insert_csv0['product_image'],
+                'hsn_no' => substr(trim($insert_csv0['hsn_no']), 0, 20),
 
             ];
 
@@ -202,7 +223,6 @@ class ImportExcelController extends Controller
             }
             // var_dump($inserted);
         }
-        fclose($fp) or exit("can't close file");
 
         return back()->with('success', trans('keywords.Products imported successfully'));
 

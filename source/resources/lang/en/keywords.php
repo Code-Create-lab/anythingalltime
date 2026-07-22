@@ -206,6 +206,8 @@ return [
     'MRP' => 'MRP',
     'Unit' => 'Unit',
     'EAN Code' => 'EAN Code',
+    'HSN No' => 'HSN No',
+    'HSN No is mandatory in the hsn_no column (last column) of csv file' => 'HSN No is mandatory in the hsn_no column (last column) of csv file',
     'Tags' => 'Tags',
     'Description' => 'Description',
     'Name' => 'Name',

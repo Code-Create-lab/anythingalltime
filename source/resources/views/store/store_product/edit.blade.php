@@ -40,10 +40,30 @@
                      <div class="row">
                       <div class="col-md-6">
                         <div class="form-group">
+                          <label class="bmd-label-floating">{{ __('keywords.Type')}}</label>
+                          <select name="type" class="form-control">
+                              <option disabled>{{ __('keywords.Select')}} {{ __('keywords.Type')}}</option>
+                              <option value="Regular" @if($product->type=="Regular") selected @endif>{{ __('keywords.Regular')}}</option>
+                              <option value="In Season" @if($product->type=="In Season") selected @endif>{{ __('keywords.In Season')}}</option>
+                          </select>
+                        </div>
+                      </div>
+                     </div>
+                     <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
                           <label class="bmd-label-floating">{{ __('keywords.Product')}} {{ __('keywords.Name')}}</label>
                           <input type="text" value="{{$product -> product_name}}" name="product_name" class="form-control">
                         </div>
                       </div>
+                        <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">{{ __('keywords.HSN No')}}</label>
+                          <input type="text" name="hsn_no" class="form-control" maxlength="20" value="{{old('hsn_no', $product->hsn_no)}}" required>
+                        </div>
+                      </div>
+                    </div>
+                     <div class="row">
                         <div class="col-md-6">
                       <div class="form-group">
                           <label class="bmd-label-floating">{{ __('keywords.Tags')}}</label>
@@ -86,7 +106,7 @@
                         </div>
                       </div><br>
                     <button type="submit" class="btn btn-primary pull-center">{{ __('keywords.Submit')}}</button>
-                     <a href="{{route('productlist')}}" class="btn">{{ __('keywords.Close')}}</a>
+                     <a href="{{route('storeproductlist')}}" class="btn">{{ __('keywords.Close')}}</a>
                     <div class="clearfix"></div>
                   </form>
                 </div>

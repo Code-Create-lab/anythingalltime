@@ -100,6 +100,7 @@ class StoreProductController extends Controller
         $date = date('d-m-Y');
         $mrp = $request->mrp;
         $ean = $request->ean;
+        $hsn_no = $request->hsn_no;
         $images = $request->images;
         $type = $request->type;
         $this->validate(
@@ -114,6 +115,7 @@ class StoreProductController extends Controller
                 'mrp' => 'required',
                 'tags' => 'required',
                 'ean' => 'required',
+                'hsn_no' => 'required|max:20',
                 'type' => 'required',
             ],
             [
@@ -126,6 +128,7 @@ class StoreProductController extends Controller
                 'mrp.required' => 'Enter MRP.',
                 'tags.required' => 'Enter Tags',
                 'ean.required' => 'Enter Ean Code',
+                'hsn_no.required' => 'Enter HSN No',
                 'type.required' => 'Select Product Type',
             ]
         );
@@ -158,6 +161,7 @@ class StoreProductController extends Controller
                 'product_image' => $filePath,
                 'added_by' => $store->id,
                 'type' => $type,
+                'hsn_no' => $hsn_no,
                 'approved' => 0,
             ]);
 
@@ -238,7 +242,12 @@ class StoreProductController extends Controller
             ->first();
         $product = DB::table('product')
             ->where('product_id', $product_id)
+            ->where('added_by', $store->id)
             ->first();
+
+        if (! $product) {
+            return redirect()->route('storeproductlist')->withErrors(trans('keywords.Something Wents Wrong'));
+        }
         $tags = DB::table('tags')
             ->get();
         $images = DB::table('product_images')
@@ -250,7 +259,7 @@ class StoreProductController extends Controller
             $url_aws = url('/').'/';
         }
 
-        return view('store.store_product.edit', compact('email', 'store', 'logo', 'title', 'product', 'tags', 'url_aws'));
+        return view('store.store_product.edit', compact('email', 'store', 'logo', 'title', 'product', 'tags', 'images', 'url_aws'));
     }
 
     public function UpdateProduct(Request $request)
@@ -266,22 +275,35 @@ class StoreProductController extends Controller
         $images = $request->images;
 
         $type = $request->type;
+        $hsn_no = $request->hsn_no;
         $this->validate(
             $request,
             [
 
                 'product_name' => 'required',
                 'type' => 'required',
+                'hsn_no' => 'required|max:20',
             ],
             [
                 'product_name.required' => 'Enter product name.',
                 'type.required' => 'Select Type',
+                'hsn_no.required' => 'Enter HSN No',
             ]
         );
 
+        $email = Auth::guard('store')->user()->email;
+        $store = DB::table('store')
+            ->where('email', $email)
+            ->first();
+
         $getProduct = DB::table('product')
             ->where('product_id', $product_id)
+            ->where('added_by', $store->id)
             ->first();
+
+        if (! $getProduct) {
+            return redirect()->route('storeproductlist')->withErrors(trans('keywords.Something Wents Wrong'));
+        }
 
         $image = $getProduct->product_image;
 
@@ -320,6 +342,7 @@ class StoreProductController extends Controller
                 'product_name' => $product_name,
                 'product_image' => $filePath,
                 'type' => $type,
+                'hsn_no' => $hsn_no,
             ]);
 
         $delete_main_image = DB::table('product_images')
@@ -395,6 +418,20 @@ class StoreProductController extends Controller
             return redirect()->back()->withErrors(trans('keywords.Active_Demo_Mode'));
         }
         $product_id = $request->product_id;
+
+        $email = Auth::guard('store')->user()->email;
+        $store = DB::table('store')
+            ->where('email', $email)
+            ->first();
+
+        $product = DB::table('product')
+            ->where('product_id', $product_id)
+            ->where('added_by', $store->id)
+            ->first();
+
+        if (! $product) {
+            return redirect()->route('storeproductlist')->withErrors(trans('keywords.Something Wents Wrong'));
+        }
 
         $delete = DB::table('product')->where('product_id', $request->product_id)->delete();
         if ($delete) {

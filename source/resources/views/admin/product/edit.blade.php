@@ -74,6 +74,14 @@
                         </div>
                       </div>
                        <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">{{ __('keywords.HSN No')}}</label>
+                          <input type="text" name="hsn_no" class="form-control" maxlength="20" value="{{old('hsn_no', $product->hsn_no)}}" required>
+                        </div>
+                      </div>
+                    </div>
+                     <div class="row">
+                       <div class="col-md-6">
                       <div class="form-group">
                           <label class="bmd-label-floating">{{ __('keywords.Tags')}}</label>
                            <input type="text" data-role="tagsinput" class="form-control" name="tags">

@@ -53,6 +53,7 @@
             <th>{{ __('keywords.Product')}} {{ __('keywords.Name')}}</th>
             <th>{{ __('keywords.Product Id')}}</th>
             <th>{{ __('keywords.Category')}}</th>
+            <th>{{ __('keywords.HSN No')}}</th>
             <th>{{ __('keywords.Type')}}</th>
             <th>{{ __('keywords.Product')}} {{ __('keywords.Image')}}</th>
             <th>Hide</th>
@@ -68,6 +69,7 @@
             <td>{{$products->product_name}}</td>
             <td>{{$products->product_id}}</td>
             <td> {{$products->title}}</td>
+            <td> {{$products->hsn_no}}</td>
              <td> {{$products->type}}</td>
             <td class="text-center"><img src="{{rtrim($url_aws, '/') . '/' . ltrim($products->product_image, '/')}}" alt="image" style="width:50px;height:50px; border-radius:50%;" onerror="this.src='{{asset('images/default-product.png')}}'"/></td>
             <td><input type="checkbox" data-id="{{ $products->product_id }}" name="status" class="js-switch" {{ $products->hide == 1 ? 'checked' : '' }}></td>
@@ -88,7 +90,7 @@
                   @else
                     <tr>
                       <td>{{ __('keywords.No data found')}}</td>
-                      @for ($i = 1; $i<8; $i++)
+                      @for ($i = 1; $i<9; $i++)
                         <td style="display:none"></td>
                       @endfor
                     </tr>
