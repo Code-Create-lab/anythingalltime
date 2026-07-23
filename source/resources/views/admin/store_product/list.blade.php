@@ -45,7 +45,7 @@
             <th>{{ __('keywords.price')}}</th>
             <th>{{ __('keywords.MRP')}}</th>
             <th>{{ __('keywords.Store')}}</th>
-            <th class="td-actions text-right">{{ __('keywords.Approve/Reject')}}</th>
+            <th class="td-actions text-right">{{ __('keywords.Actions')}}</th>
         </tr>
     </thead>
     <tbody>
@@ -61,6 +61,9 @@
             <td>{{$products->store_name}}({{$products->city}}),<br><b>{{$products->phone_number}}</b></td>
                
             <td class="td-actions text-right">
+                <a href="{{route('EditProduct',$products->product_id)}}" rel="tooltip" class="btn btn-success">
+                    <i class="fa fa-edit"></i>
+                </a>
                  @if($products->approved==1)
                <p><b style="color:green">{{ __('keywords.Approved')}}</b></p>
                @elseif($products->approved==2)
@@ -73,7 +76,7 @@
                    {{ __('keywords.Reject')}}
                 </a>
                 @endif
-                
+
             </td>
         </tr>
           @php $i++; @endphp
