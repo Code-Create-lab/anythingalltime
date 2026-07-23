@@ -253,13 +253,33 @@ class StoreProductController extends Controller
         $images = DB::table('product_images')
             ->where('product_id', $product_id)
             ->get();
+
+        $cat = DB::table('categories')
+            ->select('parent')
+            ->get();
+
+        if (count($cat) > 0) {
+            foreach ($cat as $cats) {
+                $a = $cats->parent;
+                $aa[] = [$a];
+            }
+        } else {
+            $a = 0;
+            $aa[] = [$a];
+        }
+
+        $category = DB::table('categories')
+            ->where('level', '!=', 0)
+            ->WhereNotIn('cat_id', $aa)
+            ->get();
+
         if ($this->storage_space != 'same_server') {
             $url_aws = rtrim(substr(Storage::disk($this->storage_space)->url('placeholder'), 0, -11), '/');
         } else {
             $url_aws = url('/').'/';
         }
 
-        return view('store.store_product.edit', compact('email', 'store', 'logo', 'title', 'product', 'tags', 'images', 'url_aws'));
+        return view('store.store_product.edit', compact('email', 'store', 'logo', 'title', 'product', 'tags', 'images', 'url_aws', 'category'));
     }
 
     public function UpdateProduct(Request $request)
@@ -274,17 +294,20 @@ class StoreProductController extends Controller
         $tags = explode(',', $request->tags);
         $images = $request->images;
 
+        $category_id = $request->cat_id;
         $type = $request->type;
         $hsn_no = $request->hsn_no;
         $this->validate(
             $request,
             [
 
+                'cat_id' => 'required',
                 'product_name' => 'required',
                 'type' => 'required',
                 'hsn_no' => 'required|max:20',
             ],
             [
+                'cat_id.required' => 'Select category',
                 'product_name.required' => 'Enter product name.',
                 'type.required' => 'Select Type',
                 'hsn_no.required' => 'Enter HSN No',
@@ -339,6 +362,7 @@ class StoreProductController extends Controller
         $insertproduct = DB::table('product')
             ->where('product_id', $product_id)
             ->update([
+                'cat_id' => $category_id,
                 'product_name' => $product_name,
                 'product_image' => $filePath,
                 'type' => $type,

@@ -40,6 +40,19 @@
                      <div class="row">
                       <div class="col-md-6">
                         <div class="form-group">
+                          <label class="bmd-label-floating">{{ __('keywords.Category')}}</label>
+                          <select name="cat_id" class="form-control">
+                              <option disabled>{{ __('keywords.Select')}} {{ __('keywords.Category')}}</option>
+                              @foreach($category as $categorys)
+                              <option value="{{$categorys->cat_id}}" @if($product->cat_id==$categorys->cat_id) selected @endif>@if($categorys->level==1)-@endif @if($categorys->level==2)--@endif {{$categorys->title}}</option>
+                              @endforeach
+                          </select>
+                        </div>
+                      </div>
+                     </div>
+                     <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
                           <label class="bmd-label-floating">{{ __('keywords.Type')}}</label>
                           <select name="type" class="form-control">
                               <option disabled>{{ __('keywords.Select')}} {{ __('keywords.Type')}}</option>
