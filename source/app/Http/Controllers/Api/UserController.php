@@ -485,24 +485,25 @@ class UserController extends Controller
         $referral_c = $startingg1.$referral_code;
 
         $date = date('d-m-Y');
-        $this->getImageStorage();
+        $url_aws = $this->getImageStorage();
 
-        if ($request->user_image) {
-            $image = $request->user_image;
-            $fileName = $image->getClientOriginalName();
-            $fileName = str_replace(' ', '-', $fileName);
+        if ($request->hasFile('user_image')) {
+            $image = $request->file('user_image');
+            $fileName = str_replace(' ', '-', $image->getClientOriginalName());
 
             if ($this->storage_space != 'same_server') {
-                $image_name = $image->getClientOriginalName();
-                $image = $request->file('user_image');
-                $filePath = '/user/'.$image_name;
-                Storage::disk($this->storage_space)->put($filePath, fopen($request->file('user_image'), 'r+'));
+                $filePath = '/user/'.uniqid().'-'.$fileName;
+                Storage::disk($this->storage_space)->put($filePath, fopen($image->getRealPath(), 'r+'));
             } else {
 
                 $image->move('images/user/'.$date.'/', $fileName);
                 $filePath = '/images/user/'.$date.'/'.$fileName;
 
             }
+
+            // The column holds the fully qualified URL, so clients render it
+            // as-is instead of prefixing it with /app's image_url.
+            $filePath = $this->absoluteImageUrl($url_aws, $filePath);
         } else {
             $filePath = 'N/A';
         }
@@ -682,6 +683,9 @@ class UserController extends Controller
                 $countp = 0;
             }
             $user->cart_count = $countp;
+            // Rows written before avatars moved to absolute URLs still hold a
+            // relative key, so normalise on read and keep the client on one shape.
+            $user->user_image = $this->absoluteImageUrl($this->getImageStorage(), $user->user_image);
             $message = ['status' => '1', 'message' => 'User Profile', 'data' => $user, 'token' => $token];
 
             return $message;
@@ -1020,17 +1024,20 @@ class UserController extends Controller
             $user_password = $uu->password;
             $date = date('d-m-Y');
 
-            $this->getImageStorage();
+            $url_aws = $this->getImageStorage();
 
             // hasFile(), not a truthy check: the app also posts user_image as a
             // plain URL string when the picture is unchanged.
             if ($request->hasFile('user_image')) {
                 $image = $request->file('user_image');
-                $fileName = $image->getClientOriginalName();
-                $fileName = str_replace(' ', '-', $fileName);
+                $fileName = str_replace(' ', '-', $image->getClientOriginalName());
 
                 if ($this->storage_space != 'same_server') {
-                    $filePath = '/user/'.$fileName;
+                    // The bucket is flat, so prefix the key with the user id and a
+                    // timestamp: two users uploading "photo.jpg" would otherwise
+                    // overwrite each other, and a reused key serves a stale image
+                    // from CDN/app cache.
+                    $filePath = '/user/'.$user_id.'-'.time().'-'.$fileName;
                     Storage::disk($this->storage_space)->put($filePath, fopen($image->getRealPath(), 'r+'));
                 } else {
 
@@ -1038,6 +1045,14 @@ class UserController extends Controller
                     $filePath = '/images/user/'.$date.'/'.$fileName;
 
                 }
+
+                // Every upload writes a new key, so the previous avatar would be
+                // orphaned in the bucket forever.
+                $this->deleteStoredImage($url_aws, $uu->user_image, $filePath);
+
+                // The column holds the fully qualified URL, so clients render it
+                // as-is instead of prefixing it with /app's image_url.
+                $filePath = $this->absoluteImageUrl($url_aws, $filePath);
             } else {
                 $filePath = $uu->user_image;
             }
@@ -1072,6 +1087,10 @@ class UserController extends Controller
                     $user = User::where('id', $user_id)
                         ->first();
                     $token = $user->createToken('token')->accessToken;
+                    // Return the avatar ready to render. The column keeps the
+                    // relative key so /app's image_url prefix still applies
+                    // everywhere else.
+                    $Userdetails->user_image = $this->absoluteImageUrl($url_aws, $Userdetails->user_image);
                     $message = ['status' => '1', 'message' => 'Profile Updated', 'data' => $Userdetails, 'token' => $token];
 
                     return $message;
@@ -1082,6 +1101,68 @@ class UserController extends Controller
                 }
             }
         }
+    }
+
+    /**
+     * Remove a previously stored image once it has been replaced.
+     *
+     * Runs against whichever disk getImageStorage() selected, so it must be
+     * called after that. Never throws: a failed cleanup must not fail the
+     * profile update that already succeeded.
+     */
+    private function deleteStoredImage(string $base_url, ?string $old_path, ?string $new_path = null): void
+    {
+        $old_path = trim((string) $old_path);
+
+        // 'N/A' is the placeholder written at registration when no avatar was
+        // supplied.
+        if ($old_path === '' || $old_path === 'N/A') {
+            return;
+        }
+
+        $base = rtrim($base_url, '/');
+
+        // Stored values are absolute URLs on our own bucket/app. Anything else
+        // on a remote host — a Google or Facebook avatar from social_login —
+        // is not ours to delete.
+        if (str_starts_with($old_path, 'http')) {
+            if ($base === '' || ! str_starts_with($old_path, $base.'/')) {
+                return;
+            }
+
+            $old_path = substr($old_path, strlen($base));
+        }
+
+        if ($new_path !== null && ltrim($old_path, '/') === ltrim($new_path, '/')) {
+            return;
+        }
+
+        try {
+            if ($this->storage_space != 'same_server') {
+                Storage::disk($this->storage_space)->delete(ltrim($old_path, '/'));
+            } else {
+                $local = public_path(ltrim($old_path, '/'));
+                if (is_file($local)) {
+                    unlink($local);
+                }
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('Failed to delete old image '.$old_path.': '.$e->getMessage());
+        }
+    }
+
+    /**
+     * Turn a stored relative image key into a fully qualified URL.
+     */
+    private function absoluteImageUrl(string $base_url, ?string $path): ?string
+    {
+        $path = trim((string) $path);
+
+        if ($path === '' || $path === 'N/A' || str_starts_with($path, 'http')) {
+            return $path === '' ? null : $path;
+        }
+
+        return rtrim($base_url, '/').'/'.ltrim($path, '/');
     }
 
     public function user_block_check(Request $request)
