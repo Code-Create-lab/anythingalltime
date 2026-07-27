@@ -41,8 +41,15 @@ trait SendInapp
         return $record?->device_id;
     }
 
-    private function prepareNotification(string $deviceToken, string $notification_title, string $notification_text): void
+    private function prepareNotification(?string $deviceToken, string $notification_title, string $notification_text): void
     {
+        // A user/store/driver that never registered an FCM token has a null
+        // device_id. There is nothing to push to, and the caller still writes
+        // the in-app record, so skip instead of failing the whole request.
+        if ($deviceToken === null || trim($deviceToken) === '') {
+            return;
+        }
+
         $notification = [
             'title' => $notification_title,
             'body' => $notification_text,
