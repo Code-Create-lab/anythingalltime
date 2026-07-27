@@ -987,18 +987,27 @@ class UserController extends Controller
 
     public function profile_edit(Request $request)
     {
-        $user_id = $request->user_id;
-        $checuss = DB::table('users')
-            ->first();
-        $user_name = $request->user_name;
-        $user_city = $request->user_city;
-        $user_area = $request->user_area;
-        $user_email = $request->user_email;
-        $user_phone = $request->user_phone;
-        $user_image = $request->user_image;
+        // The route sits behind auth:api, so fall back to the token owner when
+        // the app posts an empty/absent user_id.
+        $user_id = $request->user_id ?: optional($request->user())->id;
         $uu = DB::table('users')
             ->where('id', $user_id)
             ->first();
+
+        if (! $uu) {
+            $message = ['status' => '0', 'message' => 'User not registered'];
+
+            return $message;
+        }
+
+        // Fall back to the stored value so a partial payload never wipes a
+        // column (and never sends NULL into the NOT NULL `name` column).
+        $user_name = $request->user_name ?? $uu->name;
+        $user_city = $request->user_city ?? $uu->user_city;
+        $user_area = $request->user_area ?? $uu->user_area;
+        $user_email = $request->user_email ?? $uu->email;
+        $user_phone = $request->user_phone ?? $uu->user_phone;
+
         if ($uu->user_phone == '9999999999') {
             $user = User::where('id', $user_id)
                 ->first();
@@ -1012,16 +1021,16 @@ class UserController extends Controller
 
             $this->getImageStorage();
 
-            if ($request->user_image) {
-                $image = $request->user_image;
+            // hasFile(), not a truthy check: the app also posts user_image as a
+            // plain URL string when the picture is unchanged.
+            if ($request->hasFile('user_image')) {
+                $image = $request->file('user_image');
                 $fileName = $image->getClientOriginalName();
                 $fileName = str_replace(' ', '-', $fileName);
 
                 if ($this->storage_space != 'same_server') {
-                    $image_name = $image->getClientOriginalName();
-                    $image = $request->file('user_image');
-                    $filePath = '/user/'.$image_name;
-                    Storage::disk($this->storage_space)->put($filePath, fopen($request->file('user_image'), 'r+'));
+                    $filePath = '/user/'.$fileName;
+                    Storage::disk($this->storage_space)->put($filePath, fopen($image->getRealPath(), 'r+'));
                 } else {
 
                     $image->move('images/user/'.$date.'/', $fileName);
