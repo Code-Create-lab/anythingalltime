@@ -585,6 +585,21 @@ class CartController extends Controller
         $delivery_date = $request->delivery_date;
         $time_slot = $request->time_slot;
 
+        // orders.delivery_date and orders.time_slot are NOT NULL, so a missing
+        // value used to surface as a raw SQL 500. Validate before the cleanup
+        // below, which deletes the user's pending orders.
+        if ($time_slot == null) {
+            $message = ['status' => '0', 'message' => 'Please select a delivery time slot'];
+
+            return $message;
+        }
+
+        // The slot itself carries the delivery day for same-day orders; only a
+        // scheduled slot needs an explicit date.
+        if ($delivery_date == null) {
+            $delivery_date = date('Y-m-d');
+        }
+
         $ordsssss = DB::table('orders')
             ->where('payment_method', null)
             ->where('user_id', $user_id)
