@@ -440,68 +440,6 @@ class RegisterController extends Controller
         }
     }
 
-    public function profile_edit(Request $request)
-    {
-        $user_id = $request->user_id;
-        $user_name = $request->user_name;
-        $user_email = $request->user_email;
-        $user_phone = $request->user_phone;
-        $user_image = $request->user_image;
-        $uu = DB::table('users')
-            ->where('user_id', $user_id)
-            ->first();
-        $user_password = $uu->user_password;
-        // $date=date('d-m-Y');
-
-        if ($request->user_image) {
-            $user_image = $request->user_image;
-            $user_image = str_replace('data:image/png;base64,', '', $user_image);
-            $fileName = str_replace(' ', '-', $user_image);
-            $fileName = date('dmyHis').'user_image'.'.'.'png';
-            $fileName = str_replace(' ', '-', $fileName);
-            \File::put(public_path().'/images/user/'.$fileName, base64_decode($user_image));
-            $user_image = 'images/user/'.$fileName;
-        } else {
-            $user_image = 'N/A';
-        }
-
-        $checkUser = DB::table('users')
-            ->where('user_phone', $user_phone)
-            ->where('user_id', '!=', $user_id)
-            ->first();
-        if ($checkUser && $checkUser->is_verified == 1) {
-            $message = ['status' => '0', 'message' => 'This Phone number is attached with another account'];
-
-            return $message;
-        } else {
-
-            $insertUser = DB::table('users')
-                ->where('user_id', $user_id)
-                ->update([
-                    'user_name' => $user_name,
-                    'user_email' => $user_email,
-                    'user_phone' => $user_phone,
-                    'user_image' => $user_image,
-                    'user_password' => $user_password,
-                ]);
-
-            $Userdetails = DB::table('users')
-                ->where('user_id', $user_id)
-                ->first();
-
-            if ($insertUser) {
-
-                $message = ['status' => '1', 'message' => 'Profile Updated', 'data' => $Userdetails];
-
-                return $message;
-            } else {
-                $message = ['status' => '0', 'message' => 'Something Went wrong'];
-
-                return $message;
-            }
-        }
-    }
-
     public function user_block_check(Request $request)
     {
         $user_id = $request->user_id;
