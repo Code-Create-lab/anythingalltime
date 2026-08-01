@@ -63,7 +63,7 @@ class CouponController extends Controller
         }
     }
 
-    public function coupon_list_old(Request $request)
+    public function coupon_list(Request $request)
     {
         $currentdate = Carbon::now();
         $cart_id = $request->cart_id;
@@ -114,6 +114,14 @@ class CouponController extends Controller
             return $message;
         }
 
+    }
+
+    /**
+     * Backwards-compatible alias for coupon_list().
+     */
+    public function coupon_list_old(Request $request)
+    {
+        return $this->coupon_list($request);
     }
 
     public function genCouponRndCode(Request $request)
