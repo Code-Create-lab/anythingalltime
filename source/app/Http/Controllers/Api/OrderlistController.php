@@ -18,30 +18,38 @@ class OrderlistController extends Controller
         $address_id = $request->address_id;
         $store_id = $request->store_id;
         $date = date('Y-m-d');
-        $image = $request->orderlist;
-        $fileName = $image->getClientOriginalName();
-        $fileName = str_replace(' ', '-', $fileName);
 
-        $this->getImageStorage();
+        // The app posts the photo as `orderlist`, but older builds send it as
+        // `image`. Resolve either, and bail out with a normal API payload when
+        // neither is present instead of fataling on a null upload.
+        $image = $request->file('orderlist') ?: $request->file('image');
 
-        if ($this->storage_space != 'same_server') {
-            $image_name = $image->getClientOriginalName();
-            $image = $request->file('orderlist');
-            $filePath = '/images/order/'.$image_name;
-            Storage::disk($this->storage_space)->put($filePath, fopen($request->file('image'), 'r+'));
-        } else {
-
-            $image->move('images/order/'.$date.'/', $fileName);
-            $filePath = '/images/order/'.$date.'/'.$fileName;
-
+        if (! $image || ! $image->isValid()) {
+            return ['status' => '0', 'message' => 'Please attach an order list photo'];
         }
 
+        // Reject the duplicate before touching storage, otherwise every retry
+        // leaves an orphaned file that no row ever references.
         $check = DB::table('order_by_photo')
             ->where('user_id', $user_id)
             ->where('store_id', $store_id)
             ->where('processed', 0)
             ->get();
+
         if (count($check) == 0) {
+            $fileName = str_replace(' ', '-', $image->getClientOriginalName());
+
+            $this->getImageStorage();
+
+            if ($this->storage_space != 'same_server') {
+                $filePath = '/images/order/'.$date.'/'.uniqid().'-'.$fileName;
+                Storage::disk($this->storage_space)->put($filePath, fopen($image->getRealPath(), 'r+'));
+            } else {
+
+                $image->move('images/order/'.$date.'/', $fileName);
+                $filePath = '/images/order/'.$date.'/'.$fileName;
+
+            }
 
             $insert = DB::table('order_by_photo')
                 ->insertgetid([
